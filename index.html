@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Store - Developer Dashboard</title>
+    <title>GitHub File Hosting & Download Link Generator</title>
     <style>
         * {
             margin: 0;
@@ -12,541 +12,737 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #24292f 0%, #0d1117 50%, #21262d 100%);
             min-height: 100vh;
-            color: #333;
+            padding: 20px;
+            color: #c9d1d9;
         }
 
-        /* Header Styles */
-        header {
-            background: #fff;
-            padding: 20px 40px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(33, 38, 45, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #30363d;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f0f6fc;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #58a6ff, #f85149);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .github-logo {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 3rem;
+        }
+
+        .info-box {
+            background: rgba(56, 139, 253, 0.1);
+            border: 2px solid #388bfd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #58a6ff;
+            font-size: 1.1rem;
+        }
+
+        .info-text {
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        .step-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo h1 {
-            font-size: 1.8em;
-            color: #2c3e50;
-            font-weight: 700;
-        }
-
-        .menu-toggle {
-            display: none;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: #667eea;
-            cursor: pointer;
-        }
-
-        .nav-menu {
-            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .nav-menu a {
-            color: #666;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            transition: color 0.3s ease;
+        .step-box {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(40, 44, 52, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
         }
 
-        .nav-menu a:hover {
-            color: #667eea;
+        .step-box:hover {
+            border-color: #58a6ff;
+            transform: translateY(-2px);
         }
 
-        .auth-options {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .profile-btn {
-            width: 40px;
-            height: 40px;
-            background: #667eea;
+        .step-number {
+            background: linear-gradient(135deg, #58a6ff, #f85149);
             color: white;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .profile-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Main Content */
-        main {
-            margin-top: 80px;
-            padding: 40px;
-        }
-
-        .developer-section {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .developer-section h2 {
-            font-size: 2.5em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: #555;
-            font-weight: 600;
-            font-size: 0.95em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 18px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            background: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #aaa;
-            font-size: 15px;
-        }
-
-        .upload-btn {
-            width: 100%;
-            padding: 18px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-
-        .upload-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
-        }
-
-        .upload-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .loading {
-            display: none;
-            width: 22px;
-            height: 22px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top: 2px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 12px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error-message,
-        .success-message {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            font-size: 14px;
-            line-height: 1.5;
-            display: none;
-        }
-
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
-
-        .success-message {
-            background: #e8f5e8;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
-
-        /* Preview Section */
-        .preview-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
-        .preview-section h3 {
-            font-size: 1.5em;
-            color: #2c3e50;
+            font-weight: bold;
             margin-bottom: 15px;
         }
 
-        .preview-content {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .preview-icon {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid #e0e0e0;
-        }
-
-        .preview-details h4 {
-            font-size: 1.2em;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .preview-details p {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .preview-details a {
-            color: #667eea;
-            text-decoration: none;
+        .step-title {
+            color: #f0f6fc;
             font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
 
-        .preview-details a:hover {
-            text-decoration: underline;
+        .step-description {
+            color: #8b949e;
+            line-height: 1.5;
+            font-size: 0.9rem;
         }
 
-        /* Mobile Responsive */
+        .upload-section {
+            background: rgba(22, 27, 34, 0.8);
+            border: 2px dashed #30363d;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #58a6ff;
+            background: rgba(22, 27, 34, 0.9);
+        }
+
+        .upload-section.dragover {
+            border-color: #f85149;
+            background: rgba(248, 81, 73, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #58a6ff;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #c9d1d9;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            font-size: 0.9rem;
+            color: #8b949e;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .file-details {
+            margin-bottom: 20px;
+        }
+
+        .file-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .file-size, .file-type {
+            color: #8b949e;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .github-config {
+            display: none;
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .config-title {
+            color: #f0f6fc;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #c9d1d9;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .form-input::placeholder {
+            color: #8b949e;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .generate-btn:hover {
+            background: linear-gradient(135deg, #2ea043, #238636);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(35, 134, 54, 0.3);
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-box {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #238636;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            color: #2ea043;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .link-display {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            font-size: 0.9rem;
+            color: #58a6ff;
+            margin-bottom: 15px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: #58a6ff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background: #4184e4;
+            transform: translateY(-1px);
+        }
+
+        .test-btn {
+            background: #f85149;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-btn:hover {
+            background: #da3633;
+            transform: translateY(-1px);
+        }
+
+        .clear-btn {
+            background: #6e7681;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #8b949e;
+            transform: translateY(-1px);
+        }
+
+        .success-message {
+            background: rgba(35, 134, 54, 0.2);
+            color: #2ea043;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #238636;
+        }
+
+        .instructions-box {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid #f85149;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions-title {
+            color: #f85149;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .instruction-step {
+            margin-bottom: 10px;
+            color: #c9d1d9;
+            line-height: 1.5;
+        }
+
+        .code-snippet {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #58a6ff;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
         @media (max-width: 768px) {
-            header {
-                padding: 15px 20px;
+            .container {
+                margin: 10px;
+                padding: 25px 20px;
             }
 
-            .menu-toggle {
-                display: block;
+            h1 {
+                font-size: 2rem;
             }
 
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: #fff;
+            .step-container {
                 flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
             }
 
-            .nav-menu.active {
-                display: flex;
-            }
-
-            .logo h1 {
-                font-size: 1.5em;
-            }
-
-            .developer-section h2 {
-                font-size: 2em;
-            }
-
-            .preview-content {
+            .button-group {
                 flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .preview-icon {
-                width: 80px;
-                height: 80px;
-            }
-        }
-
-        /* Animation */
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <button class="menu-toggle" id="menuToggle">☰</button>
-            <h1>AR Store</h1>
-        </div>
-        <nav class="nav-menu" id="navMenu">
-            <a href="index.html">Home</a>
-            <a href="#products">Products</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-        </nav>
-        <div class="auth-options" id="authOptions">
-            <a href="login.html" class="login-btn" id="loginBtn">Login</a>
-        </div>
-    </header>
-
-    <main class="fade-in">
-        <section class="developer-section">
-            <h2>Upload Your App</h2>
-
-            <div id="errorMessage" class="error-message"></div>
-            <div id="successMessage" class="success-message"></div>
-
-            <!-- App Upload Form -->
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label for="appIconUrl">App Icon URL</label>
-                    <input type="url" id="appIconUrl" placeholder="Enter app icon URL" required>
-                </div>
-                <div class="form-group">
-                    <label for="appName">App Title</label>
-                    <input type="text" id="appName" placeholder="Enter app title" required>
-                </div>
-                <div class="form-group">
-                    <label for="appDescription">App Description</label>
-                    <textarea id="appDescription" placeholder="Describe your app" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="appLink">App Link</label>
-                    <input type="url" id="appLink" placeholder="Enter app download link" required>
-                </div>
-                <button type="submit" class="upload-btn" id="uploadBtn">
-                    <span class="loading" id="loading"></span>
-                    <span id="uploadBtnText">Submit App</span>
-                </button>
-            </form>
-
-            <!-- Preview Section -->
-            <div class="preview-section" id="previewSection">
-                <h3>App Preview</h3>
-                <div class="preview-content" id="previewContent"></div>
+    <div class="container">
+        <div class="github-logo">🐙</div>
+        <h1>GitHub File Hosting</h1>
+        
+        <div class="info-box">
+            <div class="info-title">🚀 How it works:</div>
+            <div class="info-text">
+                This tool helps you generate proper GitHub download links. Upload a file here, configure your GitHub details, 
+                and get a direct download link that works anywhere on the internet!
             </div>
-        </section>
-    </main>
+        </div>
 
-    <!-- Firebase SDK and Logic -->
-    <script type="module">
-        // Import Firebase Auth and Realtime Database functions
-        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getDatabase, ref, push, set, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
-        import { auth } from './firebase-config.js';
+        <div class="step-container">
+            <div class="step-box">
+                <div class="step-number">1</div>
+                <div class="step-title">Create Repository</div>
+                <div class="step-description">Create a new public repository on GitHub for file hosting</div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">2</div>
+                <div class="step-title">Upload File</div>
+                <div class="step-description">Select and upload your file here to prepare it for GitHub</div>
+            </div>
+            <div class="step-box">
+                <div class="step-number">3</div>
+                <div class="step-title">Generate Link</div>
+                <div class="step-description">Configure settings and get your download link ready</div>
+            </div>
+        </div>
 
-        // Initialize Realtime Database
-        const db = getDatabase();
+        <div class="upload-section" id="uploadArea">
+            <div class="upload-icon">📂</div>
+            <div class="upload-text">Click or drag file here</div>
+            <div class="upload-subtext">Any file type supported</div>
+        </div>
 
-        // Elements
-        const uploadForm = document.getElementById('uploadForm');
-        const appIconUrlInput = document.getElementById('appIconUrl');
-        const appNameInput = document.getElementById('appName');
-        const appDescriptionInput = document.getElementById('appDescription');
-        const appLinkInput = document.getElementById('appLink');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const loading = document.getElementById('loading');
-        const errorMessage = document.getElementById('errorMessage');
+        <input type="file" id="fileInput">
+
+        <div class="file-info" id="fileInfo">
+            <div class="file-details">
+                <div class="file-name" id="fileName"></div>
+                <div class="file-size" id="fileSize"></div>
+                <div class="file-type" id="fileType"></div>
+            </div>
+            <button class="clear-btn" id="clearBtn">🗑️ Clear File</button>
+        </div>
+
+        <div class="github-config" id="githubConfig">
+            <div class="config-title">
+                ⚙️ GitHub Configuration
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="username">GitHub Username:</label>
+                <input type="text" id="username" class="form-input" placeholder="e.g., yourusername">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="repository">Repository Name:</label>
+                <input type="text" id="repository" class="form-input" placeholder="e.g., file-hosting">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="branch">Branch Name:</label>
+                <input type="text" id="branch" class="form-input" placeholder="main" value="main">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="folder">Folder Path (optional):</label>
+                <input type="text" id="folder" class="form-input" placeholder="e.g., files/ or downloads/">
+            </div>
+
+            <button class="generate-btn" id="generateBtn">
+                🔗 Generate Download Link
+            </button>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-box">
+                <div class="result-title">
+                    ✅ Generated GitHub Download Link:
+                </div>
+                <div class="link-display" id="generatedLink"></div>
+                <div class="button-group">
+                    <button class="copy-btn" id="copyBtn">
+                        📋 Copy Link
+                    </button>
+                    <button class="test-btn" id="testBtn">
+                        🧪 Test Download
+                    </button>
+                </div>
+                <div class="success-message" id="successMessage">✅ Link copied to clipboard!</div>
+            </div>
+
+            <div class="instructions-box">
+                <div class="instructions-title">📋 Next Steps to Make it Work:</div>
+                <div class="instruction-step">
+                    <strong>1.</strong> Go to your GitHub repository: 
+                    <div class="code-snippet" id="repoUrl">https://github.com/yourusername/yourrepo</div>
+                </div>
+                <div class="instruction-step">
+                    <strong>2.</strong> Click "Upload files" or drag your file to the repository
+                </div>
+                <div class="instruction-step">
+                    <strong>3.</strong> Upload the file with the exact same name: <strong id="uploadFileName">filename.ext</strong>
+                </div>
+                <div class="instruction-step">
+                    <strong>4.</strong> Commit the changes
+                </div>
+                <div class="instruction-step">
+                    <strong>5.</strong> Your download link will work immediately! 🎉
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileType = document.getElementById('fileType');
+        const githubConfig = document.getElementById('githubConfig');
+        const generateBtn = document.getElementById('generateBtn');
+        const resultSection = document.getElementById('resultSection');
+        const generatedLink = document.getElementById('generatedLink');
+        const copyBtn = document.getElementById('copyBtn');
+        const testBtn = document.getElementById('testBtn');
         const successMessage = document.getElementById('successMessage');
-        const previewSection = document.getElementById('previewSection');
-        const previewContent = document.getElementById('previewContent');
-        const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-        const authOptions = document.getElementById('authOptions');
+        const clearBtn = document.getElementById('clearBtn');
+        const repoUrl = document.getElementById('repoUrl');
+        const uploadFileName = document.getElementById('uploadFileName');
 
-        // Menu toggle for mobile
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+        const username = document.getElementById('username');
+        const repository = document.getElementById('repository');
+        const branch = document.getElementById('branch');
+        const folder = document.getElementById('folder');
+
+        let currentFile = null;
+        let downloadUrl = null;
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Get file extension
+        function getFileExtension(filename) {
+            return filename.split('.').pop().toLowerCase();
+        }
+
+        // Upload area interactions
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
         });
 
-        // Show/hide messages
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            successMessage.style.display = 'none';
-        }
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
 
-        function showSuccess(message) {
-            successMessage.textContent = message;
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-        }
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
 
-        function clearMessages() {
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-        }
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
 
-        // Set loading state
-        function setLoading(isLoading) {
-            loading.style.display = isLoading ? 'inline-block' : 'none';
-            uploadBtn.disabled = isLoading;
-            uploadBtnText.textContent = isLoading ? 'Submitting...' : 'Submit App';
-        }
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
 
-        // Preview app details
-        function updatePreview() {
-            const iconUrl = appIconUrlInput.value.trim();
-            const appName = appNameInput.value.trim();
-            const appDescription = appDescriptionInput.value.trim();
-            const appLink = appLinkInput.value.trim();
-
-            if (iconUrl || appName || appDescription || appLink) {
-                previewSection.style.display = 'block';
-                previewContent.innerHTML = `
-                    <img src="${iconUrl || 'https://via.placeholder.com/100'}" class="preview-icon" alt="App Icon">
-                    <div class="preview-details">
-                        <h4>${appName || 'App Title'}</h4>
-                        <p>${appDescription || 'App Description'}</p>
-                        ${appLink ? `<a href="${appLink}" target="_blank">View App</a>` : '<p>No link provided</p>'}
-                    </div>
-                `;
-            } else {
-                previewSection.style.display = 'none';
+        // Handle file selection
+        function handleFile(file) {
+            currentFile = file;
+            
+            // Display file information
+            fileName.textContent = `📄 ${file.name}`;
+            fileSize.textContent = `📊 Size: ${formatFileSize(file.size)}`;
+            fileType.textContent = `🏷️ Type: ${file.type || 'Unknown'} (.${getFileExtension(file.name)})`;
+            
+            // Create download URL for local testing
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const blob = new Blob([e.target.result], { type: file.type });
+                
+                if (downloadUrl) {
+                    URL.revokeObjectURL(downloadUrl);
+                }
+                
+                downloadUrl = URL.createObjectURL(blob);
+            };
+            reader.readAsArrayBuffer(file);
+            
+            // Show file info and config sections
+            fileInfo.style.display = 'block';
+            githubConfig.style.display = 'block';
+            
+            // Pre-fill some fields
+            if (!repository.value) {
+                repository.value = 'file-hosting';
             }
         }
 
-        // Add input listeners for real-time preview
-        appIconUrlInput.addEventListener('input', updatePreview);
-        appNameInput.addEventListener('input', updatePreview);
-        appDescriptionInput.addEventListener('input', updatePreview);
-        appLinkInput.addEventListener('input', updatePreview);
-
-        // Handle app submission
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearMessages();
-            setLoading(true);
-
-            const appIconUrl = appIconUrlInput.value.trim();
-            const appName = appNameInput.value.trim();
-            const appDescription = appDescriptionInput.value.trim();
-            const appLink = appLinkInput.value.trim();
-
-            if (!appIconUrl || !appName || !appDescription || !appLink) {
-                showError('Please fill in all fields.');
-                setLoading(false);
+        // Generate GitHub download link
+        generateBtn.addEventListener('click', () => {
+            if (!currentFile) {
+                alert('Please select a file first!');
                 return;
             }
 
+            const user = username.value.trim();
+            const repo = repository.value.trim();
+            const branchName = branch.value.trim() || 'main';
+            const folderPath = folder.value.trim();
+
+            if (!user || !repo) {
+                alert('Please fill in Username and Repository name!');
+                return;
+            }
+
+            // Construct GitHub raw URL
+            let githubUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branchName}/`;
+            
+            if (folderPath) {
+                // Ensure folder path ends with /
+                const cleanFolder = folderPath.endsWith('/') ? folderPath : folderPath + '/';
+                githubUrl += cleanFolder;
+            }
+            
+            githubUrl += currentFile.name;
+
+            // Display the generated link
+            generatedLink.textContent = githubUrl;
+            
+            // Update instructions
+            repoUrl.textContent = `https://github.com/${user}/${repo}`;
+            uploadFileName.textContent = currentFile.name;
+            
+            // Show result section
+            resultSection.style.display = 'block';
+        });
+
+        // Copy link to clipboard
+        copyBtn.addEventListener('click', async () => {
+            const linkText = generatedLink.textContent;
+            
             try {
-                const user = auth.currentUser;
-                if (!user) {
-                    showError('You must be logged in to submit an app.');
-                    setLoading(false);
-                    return;
-                }
-
-                // Save app metadata to Realtime Database
-                const appsRef = ref(db, 'apps');
-                const newAppRef = push(appsRef);
-                await set(newAppRef, {
-                    iconUrl: appIconUrl,
-                    name: appName,
-                    description: appDescription,
-                    link: appLink,
-                    uploadedBy: user.displayName || user.email || 'Anonymous',
-                    uploadedByUid: user.uid,
-                    status: 'pending',
-                    createdAt: Date.now()
-                });
-
-                showSuccess('App submitted successfully! Awaiting admin verification.');
-                uploadForm.reset();
-                previewSection.style.display = 'none';
-            } catch (error) {
-                showError('Error submitting app: ' + error.message);
-                console.error('Submission error:', error);
-            } finally {
-                setLoading(false);
+                await navigator.clipboard.writeText(linkText);
+                showSuccessMessage();
+            } catch (err) {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = linkText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showSuccessMessage();
             }
         });
 
-        // Check authentication state
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // User is logged in
-                authOptions.innerHTML = `
-                    <a href="profile.html" class="profile-btn" title="View Profile">Pro</a>
-                `;
-                try {
-                    const userRef = ref(db, 'users/' + user.uid);
-                    const snapshot = await get(userRef);
-                    if (!snapshot.exists()) {
-                        console.warn('User data not found for UID:', user.uid);
-                    }
-                } catch (error) {
-                    console.error('Error fetching user data:', error.message, error);
-                    if (error.code === 'permission-denied') {
-                        showError('Permission denied: Unable to access user data.');
-                    } else {
-                        showError('Error loading user data: ' + error.message);
-                    }
-                }
-            } else {
-                // Redirect to login if not authenticated
-                window.location.href = 'login.html';
+        function showSuccessMessage() {
+            successMessage.style.display = 'block';
+            copyBtn.innerHTML = '✅ Copied!';
+            
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                copyBtn.innerHTML = '📋 Copy Link';
+            }, 2000);
+        }
+
+        // Test download with local file
+        testBtn.addEventListener('click', () => {
+            if (downloadUrl && currentFile) {
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = currentFile.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                alert('🧪 Local test download completed! The GitHub link will work after you upload the file to your repository.');
+            }
+        });
+
+        // Clear everything
+        clearBtn.addEventListener('click', () => {
+            if (downloadUrl) {
+                URL.revokeObjectURL(downloadUrl);
+                downloadUrl = null;
+            }
+            
+            currentFile = null;
+            fileInput.value = '';
+            fileInfo.style.display = 'none';
+            githubConfig.style.display = 'none';
+            resultSection.style.display = 'none';
+            
+            // Clear form
+            username.value = '';
+            repository.value = '';
+            branch.value = 'main';
+            folder.value = '';
+            generatedLink.textContent = '';
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (downloadUrl) {
+                URL.revokeObjectURL(downloadUrl);
             }
         });
     </script>
