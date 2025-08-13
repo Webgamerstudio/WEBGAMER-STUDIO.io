@@ -2,668 +2,553 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SkyFlap Adventure</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Store - Developer Dashboard</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
             min-height: 100vh;
-            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-        }
-        
-        #adBanner {
-            width: 100%;
-            max-width: 90vw;
-            height: 90px; /* Default height for largest ad */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2vh 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border: 2px solid #fff;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-        }
-        
-        #adBanner.offline {
-            background: #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        #adBanner.offline .ad-content {
-            text-align: center;
             color: #333;
-            font-weight: bold;
-            font-size: clamp(1rem, 3vw, 1.2rem);
         }
-        
-        #closeAdButton {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            padding: 5px 10px;
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            background: #FF4500;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 2;
-        }
-        
-        #closeAdButton:hover {
-            background: #CC3700;
-            transform: scale(1.05);
-        }
-        
-        #gameContainer {
-            position: relative;
+
+        /* Header Styles */
+        header {
+            background: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
             width: 100%;
-            max-width: 90vw;
-            background: #87CEEB;
-            border: 3px solid #4169E1;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        #gameCanvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 70%, #90EE90 100%);
-            touch-action: none;
-        }
-        
-        #startScreen, #gameOverScreen {
-            position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .logo {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            color: white;
-            text-align: center;
+            gap: 15px;
         }
-        
-        #startScreen h1, #gameOverScreen h1 {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin: 0 0 1rem 0;
-            color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+
+        .logo h1 {
+            font-size: 1.8em;
+            color: #2c3e50;
+            font-weight: 700;
         }
-        
-        #startScreen p, #gameOverScreen p {
-            font-size: clamp(0.8rem, 2.5vw, 1rem);
-            margin: 0.5rem 0;
-        }
-        
-        button {
-            padding: clamp(8px, 2vw, 12px) clamp(15px, 4vw, 20px);
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            background: #FFD700;
-            color: #333;
+
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            background: none;
             border: none;
-            border-radius: 25px;
+            color: #667eea;
             cursor: pointer;
-            transition: all 0.3s;
-            margin: 0.5rem;
         }
-        
-        button:hover {
-            background: #FFA500;
-            transform: scale(1.05);
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
         }
-        
-        #score {
-            position: absolute;
-            top: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
-            font-weight: bold;
+
+        .nav-menu a {
+            color: #666;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #667eea;
+        }
+
+        .auth-options {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-            z-index: 10;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
-        #studioFooter {
-            margin-top: 1vh;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-            color: #333;
-            font-weight: bold;
+        .profile-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 40px;
+        }
+
+        .developer-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .developer-section h2 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        /* Media Queries for smaller screens */
-        @media (max-width: 600px) {
-            #adBanner {
-                height: 50px; /* Adjust for smaller ad size */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #aaa;
+            font-size: 15px;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .upload-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message,
+        .success-message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .preview-section h3 {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .preview-content {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .preview-icon {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .preview-details h4 {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .preview-details p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .preview-details a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .preview-details a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
             }
 
-            #adBanner.offline .ad-content {
-                font-size: clamp(0.9rem, 2.8vw, 1rem);
+            .menu-toggle {
+                display: block;
             }
 
-            #closeAdButton {
-                padding: 4px 8px;
-                font-size: clamp(0.6rem, 1.8vw, 0.8rem);
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: #fff;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
             }
 
-            #startScreen h1, #gameOverScreen h1 {
-                font-size: clamp(1.2rem, 4vw, 2rem);
+            .nav-menu.active {
+                display: flex;
             }
 
-            button {
-                padding: clamp(6px, 1.5vw, 10px) clamp(12px, 3vw, 15px);
-                font-size: clamp(0.8rem, 2vw, 1rem);
+            .logo h1 {
+                font-size: 1.5em;
             }
 
-            #studioFooter {
-                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+            .developer-section h2 {
+                font-size: 2em;
+            }
+
+            .preview-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .preview-icon {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
 </head>
 <body>
-    <div id="adBanner">
-        <div id="adContainer"></div>
-        <div class="ad-content" style="display: none;">No Internet</div>
-        <button id="closeAdButton">Close Ad</button>
-    </div>
-    
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
-        <div id="score">0</div>
-        
-        <div id="startScreen">
-            <h1>🐦 SkyFlap Adventure</h1>
-            <p>Tap or press spacebar to make the bird fly</p>
-            <p>Avoid the pipes!</p>
-            <button onclick="startGame()">Start Game</button>
+    <header>
+        <div class="logo">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <h1>AR Store</h1>
         </div>
-        
-        <div id="gameOverScreen" style="display: none;">
-            <h1>Game Over!</h1>
-            <p>Your Score: <span id="finalScore">0</span></p>
-            <p>High Score: <span id="highScore">0</span></p>
-            <button onclick="restartGame()">Play Again</button>
+        <nav class="nav-menu" id="navMenu">
+            <a href="index.html">Home</a>
+            <a href="#products">Products</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="auth-options" id="authOptions">
+            <a href="login.html" class="login-btn" id="loginBtn">Login</a>
         </div>
-    </div>
+    </header>
 
-    <div id="studioFooter">WEBGAMER STUDIO</div>
+    <main class="fade-in">
+        <section class="developer-section">
+            <h2>Upload Your App</h2>
 
-    <script>
-        // Ad configurations for banner ads
-        const adConfigs = [
-            {
-                key: '63718988f07bc6d276f3c6a441757cae',
-                format: 'iframe',
-                height: 90,
-                width: 728,
-                params: {},
-                src: '//www.highperformanceformat.com/63718988f07bc6d276f3c6a441757cae/invoke.js'
-            },
-            {
-                key: 'c620af328467e6de19dc04af696ee0fb',
-                format: 'iframe',
-                height: 250,
-                width: 300,
-                params: {},
-                src: '//www.highperformanceformat.com/c620af328467e6de19dc04af696ee0fb/invoke.js'
-            },
-            {
-                key: '78ade24182729fceea8e45203dad915b',
-                format: 'iframe',
-                height: 50,
-                width: 320,
-                params: {},
-                src: '//www.highperformanceformat.com/78ade24182729fceea8e45203dad915b/invoke.js'
-            }
-        ];
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
 
-        const adBanner = document.getElementById('adBanner');
-        const adContainer = document.getElementById('adContainer');
-        const offlineMessage = adBanner.querySelector('.ad-content');
-        const closeAdButton = document.getElementById('closeAdButton');
-        let adRotationInterval;
+            <!-- App Upload Form -->
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="appIconUrl">App Icon URL</label>
+                    <input type="url" id="appIconUrl" placeholder="Enter app icon URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="appName">App Title</label>
+                    <input type="text" id="appName" placeholder="Enter app title" required>
+                </div>
+                <div class="form-group">
+                    <label for="appDescription">App Description</label>
+                    <textarea id="appDescription" placeholder="Describe your app" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="appLink">App Link</label>
+                    <input type="url" id="appLink" placeholder="Enter app download link" required>
+                </div>
+                <button type="submit" class="upload-btn" id="uploadBtn">
+                    <span class="loading" id="loading"></span>
+                    <span id="uploadBtnText">Submit App</span>
+                </button>
+            </form>
 
-        // Function to load a random ad
-        function loadRandomAd() {
-            adContainer.innerHTML = ''; // Clear previous ad
-            const randomAd = adConfigs[Math.floor(Math.random() * adConfigs.length)];
-            adBanner.style.height = `${randomAd.height}px`;
+            <!-- Preview Section -->
+            <div class="preview-section" id="previewSection">
+                <h3>App Preview</h3>
+                <div class="preview-content" id="previewContent"></div>
+            </div>
+        </section>
+    </main>
 
-            if (navigator.onLine) {
-                adBanner.classList.remove('offline');
-                offlineMessage.style.display = 'none';
-                const script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.innerHTML = `atOptions = ${JSON.stringify(randomAd)};`;
-                adContainer.appendChild(script);
+    <!-- Firebase SDK and Logic -->
+    <script type="module">
+        // Import Firebase Auth and Realtime Database functions
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getDatabase, ref, push, set, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { auth } from './firebase-config.js';
 
-                const invokeScript = document.createElement('script');
-                invokeScript.type = 'text/javascript';
-                invokeScript.src = randomAd.src;
-                adContainer.appendChild(invokeScript);
-            } else {
-                adBanner.classList.add('offline');
-                offlineMessage.style.display = 'block';
-            }
-        }
+        // Initialize Realtime Database
+        const db = getDatabase();
 
-        // Check internet connectivity and load ad
-        function checkConnectivityAndLoadAd() {
-            if (adBanner.style.display !== 'none') {
-                loadRandomAd();
-            }
-        }
+        // Elements
+        const uploadForm = document.getElementById('uploadForm');
+        const appIconUrlInput = document.getElementById('appIconUrl');
+        const appNameInput = document.getElementById('appName');
+        const appDescriptionInput = document.getElementById('appDescription');
+        const appLinkInput = document.getElementById('appLink');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const previewSection = document.getElementById('previewSection');
+        const previewContent = document.getElementById('previewContent');
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        const authOptions = document.getElementById('authOptions');
 
-        // Start ad rotation every 30 seconds
-        function startAdRotation() {
-            adRotationInterval = setInterval(checkConnectivityAndLoadAd, 30000);
-        }
-
-        // Load initial ad
-        checkConnectivityAndLoadAd();
-        startAdRotation();
-
-        // Close ad functionality with 10-second reappearance
-        closeAdButton.addEventListener('click', () => {
-            adBanner.style.display = 'none';
-            clearInterval(adRotationInterval); // Stop ad rotation
-            // Re-show ad after 10 seconds
-            setTimeout(() => {
-                adBanner.style.display = 'flex';
-                checkConnectivityAndLoadAd(); // Load a new ad
-                startAdRotation(); // Restart ad rotation
-            }, 10000); // 10 seconds
+        // Menu toggle for mobile
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
         });
 
-        // Listen for online/offline events
-        window.addEventListener('online', checkConnectivityAndLoadAd);
-        window.addEventListener('offline', checkConnectivityAndLoadAd);
-
-        // Game variables
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
-        const startScreen = document.getElementById('startScreen');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-        const finalScoreElement = document.getElementById('finalScore');
-        const highScoreElement = document.getElementById('highScore');
-
-        let gameState = 'start';
-        let score = 0;
-        let highScore = parseInt(localStorage.getItem('flappyHighScore')) || 0;
-        let animationId;
-
-        // Default canvas dimensions
-        const defaultWidth = 400;
-        const defaultHeight = 600;
-        const aspectRatio = defaultWidth / defaultHeight;
-
-        // Bird object
-        const bird = {
-            x: 80,
-            y: defaultHeight / 2,
-            width: 30,
-            height: 25,
-            velocity: 0,
-            gravity: 0.5,
-            jumpPower: -8,
-            rotation: 0
-        };
-
-        // Pipes array
-        let pipes = [];
-        let pipeWidth = 60;
-        const pipeGap = 180;
-        let pipeSpeed = 2;
-
-        // Cloud array for background
-        let clouds = [];
-
-        // Resize canvas to fit screen
-        function resizeCanvas() {
-            const maxWidth = window.innerWidth * 0.9;
-            const maxHeight = window.innerHeight * 0.7;
-            let newWidth = Math.min(maxWidth, defaultWidth);
-            let newHeight = newWidth / aspectRatio;
-
-            if (newHeight > maxHeight) {
-                newHeight = maxHeight;
-                newWidth = newHeight * aspectRatio;
-            }
-
-            canvas.width = newWidth;
-            canvas.height = newHeight;
-
-            // Scale game elements
-            const scaleX = newWidth / defaultWidth;
-            const scaleY = newHeight / defaultHeight;
-            bird.x = 80 * scaleX;
-            bird.width = 30 * scaleX;
-            bird.height = 25 * scaleY;
-            pipeWidth = 60 * scaleX;
-            pipeSpeed = 2 * scaleX;
-
-            bird.y = canvas.height / 2;
-
-            pipes.forEach(pipe => {
-                pipe.x *= scaleX;
-                pipe.topHeight *= scaleY;
-                pipe.bottomY *= scaleY;
-            });
-
-            clouds.forEach(cloud => {
-                cloud.x *= scaleX;
-                cloud.y *= scaleY;
-                cloud.size *= scaleX;
-                cloud.speed *= scaleX;
-            });
+        // Show/hide messages
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
         }
 
-        // Initialize clouds
-        function initClouds() {
-            clouds = [];
-            for (let i = 0; i < 5; i++) {
-                clouds.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * (canvas.height / 3),
-                    size: Math.random() * 30 + 20,
-                    speed: Math.random() * 0.5 + 0.2
-                });
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function clearMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+
+        // Set loading state
+        function setLoading(isLoading) {
+            loading.style.display = isLoading ? 'inline-block' : 'none';
+            uploadBtn.disabled = isLoading;
+            uploadBtnText.textContent = isLoading ? 'Submitting...' : 'Submit App';
+        }
+
+        // Preview app details
+        function updatePreview() {
+            const iconUrl = appIconUrlInput.value.trim();
+            const appName = appNameInput.value.trim();
+            const appDescription = appDescriptionInput.value.trim();
+            const appLink = appLinkInput.value.trim();
+
+            if (iconUrl || appName || appDescription || appLink) {
+                previewSection.style.display = 'block';
+                previewContent.innerHTML = `
+                    <img src="${iconUrl || 'https://via.placeholder.com/100'}" class="preview-icon" alt="App Icon">
+                    <div class="preview-details">
+                        <h4>${appName || 'App Title'}</h4>
+                        <p>${appDescription || 'App Description'}</p>
+                        ${appLink ? `<a href="${appLink}" target="_blank">View App</a>` : '<p>No link provided</p>'}
+                    </div>
+                `;
+            } else {
+                previewSection.style.display = 'none';
             }
         }
 
-        // Draw cloud
-        function drawCloud(cloud) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.beginPath();
-            ctx.arc(cloud.x, cloud.y, cloud.size, 0, Math.PI * 2);
-            ctx.arc(cloud.x + cloud.size * 0.7, cloud.y, cloud.size * 0.8, 0, Math.PI * 2);
-            ctx.arc(cloud.x + cloud.size * 1.4, cloud.y, cloud.size * 0.6, 0, Math.PI * 2);
-            ctx.fill();
-        }
+        // Add input listeners for real-time preview
+        appIconUrlInput.addEventListener('input', updatePreview);
+        appNameInput.addEventListener('input', updatePreview);
+        appDescriptionInput.addEventListener('input', updatePreview);
+        appLinkInput.addEventListener('input', updatePreview);
 
-        // Update clouds
-        function updateClouds() {
-            clouds.forEach(cloud => {
-                cloud.x -= cloud.speed;
-                if (cloud.x + cloud.size * 2 < 0) {
-                    cloud.x = canvas.width + cloud.size;
-                }
-            });
-        }
+        // Handle app submission
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+            setLoading(true);
 
-        // Draw bird
-        function drawBird() {
-            ctx.save();
-            ctx.translate(bird.x + bird.width/2, bird.y + bird.height/2);
-            ctx.rotate(bird.rotation);
-            
-            ctx.fillStyle = '#FFD700';
-            ctx.fillRect(-bird.width/2, -bird.height/2, bird.width, bird.height);
-            
-            ctx.fillStyle = '#FFA500';
-            ctx.fillRect(-bird.width/3, -bird.height/3, bird.width/2, bird.height/3);
-            
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(bird.width/4, -bird.height/4, 4, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = 'black';
-            ctx.beginPath();
-            ctx.arc(bird.width/4 + 1, -bird.height/4, 2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.fillStyle = '#FF4500';
-            ctx.beginPath();
-            ctx.moveTo(bird.width/2, 0);
-            ctx.lineTo(bird.width/2 + 8, 0);
-            ctx.lineTo(bird.width/2, 4);
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.restore();
-        }
+            const appIconUrl = appIconUrlInput.value.trim();
+            const appName = appNameInput.value.trim();
+            const appDescription = appDescriptionInput.value.trim();
+            const appLink = appLinkInput.value.trim();
 
-        // Draw pipe
-        function drawPipe(pipe) {
-            ctx.fillStyle = '#228B22';
-            ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
-            
-            ctx.fillStyle = '#32CD32';
-            ctx.fillRect(pipe.x - 5, pipe.topHeight - 30, pipeWidth + 10, 30);
-            
-            ctx.fillStyle = '#228B22';
-            ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, canvas.height - pipe.bottomY);
-            
-            ctx.fillStyle = '#32CD32';
-            ctx.fillRect(pipe.x - 5, pipe.bottomY, pipeWidth + 10, 30);
-        }
-
-        // Create new pipe
-        function createPipe() {
-            const topHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
-            const bottomY = topHeight + pipeGap;
-            
-            pipes.push({
-                x: canvas.width,
-                topHeight: topHeight,
-                bottomY: bottomY,
-                passed: false
-            });
-        }
-
-        // Update bird
-        function updateBird() {
-            bird.velocity += bird.gravity;
-            bird.y += bird.velocity;
-            
-            bird.rotation = Math.min(bird.velocity * 0.1, Math.PI / 6);
-            
-            if (bird.y < 0) {
-                bird.y = 0;
-                bird.velocity = 0;
+            if (!appIconUrl || !appName || !appDescription || !appLink) {
+                showError('Please fill in all fields.');
+                setLoading(false);
+                return;
             }
-            if (bird.y + bird.height > canvas.height) {
-                gameOver();
-            }
-        }
 
-        // Update pipes
-        function updatePipes() {
-            pipes.forEach(pipe => {
-                pipe.x -= pipeSpeed;
-                
-                if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
-                    pipe.passed = true;
-                    score++;
-                    scoreElement.textContent = score;
-                }
-            });
-            
-            pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
-            
-            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
-                createPipe();
-            }
-        }
-
-        // Check collision
-        function checkCollision() {
-            for (let pipe of pipes) {
-                if (bird.x < pipe.x + pipeWidth &&
-                    bird.x + bird.width > pipe.x &&
-                    bird.y < pipe.topHeight) {
-                    return true;
-                }
-                
-                if (bird.x < pipe.x + pipeWidth &&
-                    bird.x + bird.width > pipe.x &&
-                    bird.y + bird.height > pipe.bottomY) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // Draw ground
-        function drawGround() {
-            ctx.fillStyle = '#8B4513';
-            ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
-            
-            ctx.fillStyle = '#A0522D';
-            for (let i = 0; i < canvas.width; i += 40) {
-                ctx.fillRect(i, canvas.height - 15, 20, 10);
-            }
-        }
-
-        // Game loop
-        function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, '#87CEEB');
-            gradient.addColorStop(0.7, '#98FB98');
-            gradient.addColorStop(1, '#90EE90');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            updateClouds();
-            clouds.forEach(drawCloud);
-            
-            if (gameState === 'playing') {
-                updateBird();
-                updatePipes();
-                
-                if (checkCollision()) {
-                    gameOver();
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    showError('You must be logged in to submit an app.');
+                    setLoading(false);
                     return;
                 }
+
+                // Save app metadata to Realtime Database
+                const appsRef = ref(db, 'apps');
+                const newAppRef = push(appsRef);
+                await set(newAppRef, {
+                    iconUrl: appIconUrl,
+                    name: appName,
+                    description: appDescription,
+                    link: appLink,
+                    uploadedBy: user.displayName || user.email || 'Anonymous',
+                    uploadedByUid: user.uid,
+                    status: 'pending',
+                    createdAt: Date.now()
+                });
+
+                showSuccess('App submitted successfully! Awaiting admin verification.');
+                uploadForm.reset();
+                previewSection.style.display = 'none';
+            } catch (error) {
+                showError('Error submitting app: ' + error.message);
+                console.error('Submission error:', error);
+            } finally {
+                setLoading(false);
             }
-            
-            pipes.forEach(drawPipe);
-            drawBird();
-            drawGround();
-            
-            if (gameState === 'playing') {
-                animationId = requestAnimationFrame(gameLoop);
-            }
-        }
+        });
 
-        // Bird jump
-        function jump() {
-            if (gameState === 'playing') {
-                bird.velocity = bird.jumpPower;
-            }
-        }
-
-        // Start game
-        function startGame() {
-            gameState = 'playing';
-            score = 0;
-            scoreElement.textContent = score;
-            
-            bird.y = canvas.height / 2;
-            bird.velocity = 0;
-            bird.rotation = 0;
-            
-            pipes = [];
-            
-            initClouds();
-            
-            startScreen.style.display = 'none';
-            gameOverScreen.style.display = 'none';
-            
-            gameLoop();
-        }
-
-        // Game over
-        function gameOver() {
-            gameState = 'gameOver';
-            cancelAnimationFrame(animationId);
-            
-            if (score > highScore) {
-                highScore = score;
-                localStorage.setItem('flappyHighScore', highScore.toString());
-            }
-            
-            finalScoreElement.textContent = score;
-            highScoreElement.textContent = highScore;
-            gameOverScreen.style.display = 'flex';
-        }
-
-        // Restart game
-        function restartGame() {
-            startGame();
-        }
-
-        // Event listeners
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (gameState === 'start') {
-                    startGame();
-                } else if (gameState === 'playing') {
-                    jump();
-                } else if (gameState === 'gameOver') {
-                    restartGame();
+        // Check authentication state
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is logged in
+                authOptions.innerHTML = `
+                    <a href="profile.html" class="profile-btn" title="View Profile">Pro</a>
+                `;
+                try {
+                    const userRef = ref(db, 'users/' + user.uid);
+                    const snapshot = await get(userRef);
+                    if (!snapshot.exists()) {
+                        console.warn('User data not found for UID:', user.uid);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error.message, error);
+                    if (error.code === 'permission-denied') {
+                        showError('Permission denied: Unable to access user data.');
+                    } else {
+                        showError('Error loading user data: ' + error.message);
+                    }
                 }
+            } else {
+                // Redirect to login if not authenticated
+                window.location.href = 'login.html';
             }
         });
-
-        canvas.addEventListener('click', () => {
-            if (gameState === 'start') {
-                startGame();
-            } else if (gameState === 'playing') {
-                jump();
-            } else if (gameState === 'gameOver') {
-                restartGame();
-            }
-        });
-
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if (gameState === 'start') {
-                startGame();
-            } else if (gameState === 'playing') {
-                jump();
-            } else if (gameState === 'gameOver') {
-                restartGame();
-            }
-        });
-
-        window.addEventListener('resize', resizeCanvas);
-
-        resizeCanvas();
-        initClouds();
-        highScoreElement.textContent = highScore;
-        gameLoop();
     </script>
 </body>
 </html>
