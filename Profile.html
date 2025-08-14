@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Store - আমার প্রোফাইল</title>
+    <style>
+        :root {
+            --primary-color: #667eea; --primary-hover: #5a67d8; --text-dark: #2c3e50;
+            --text-light: #555; --bg-light: #f8f9fa; --border-color: #e0e0e0; --white: #ffffff;
+            --danger-color: #e53e3e; --success-color: #38a169;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); color: var(--text-dark); }
+        header { background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .logo h1 a { text-decoration: none; color: var(--text-dark); }
+        .nav-menu a { color: var(--text-light); text-decoration: none; font-weight: 500; margin-left: 20px; }
+        main { padding: 40px 5%; max-width: 900px; margin: 0 auto; }
+        .profile-card { background: var(--white); border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color); }
+        .profile-info h2 { font-size: 2em; margin-bottom: 5px; }
+        .profile-info p { color: var(--text-light); font-size: 1.1em; margin-bottom: 15px; }
+        .profile-actions button { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+        .logout-btn { border: 2px solid var(--danger-color); color: var(--danger-color); background: none; }
+        
+        /* New Sections: Notifications and My Apps */
+        .content-section { margin-top: 40px; background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        .content-section h3 { font-size: 1.5em; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        #notificationsList { list-style: none; padding: 0; }
+        .notification-item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background-color 0.3s; }
+        .notification-item.unread { background-color: #eef0ff; font-weight: 600; }
+        .notification-item:last-child { border-bottom: none; }
+        .notification-item p { margin: 0 0 5px; }
+        .notification-item small { font-weight: normal; color: #777; }
+        #myAppsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .app-card-small { text-align: center; }
+        .app-card-small img { width: 60px; height: 60px; border-radius: 15px; }
+        .app-card-small h4 { font-size: 0.9em; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><h1><a href="index.html">AR Store</a></h1></div>
+        <nav class="nav-menu"><a href="index.html">হোম</a></nav>
+    </header>
+
+    <main id="mainContent" style="display: none;">
+        <div class="profile-card">
+            <img id="profilePic" src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-pic">
+            <div class="profile-info">
+                <h2 id="displayName">ব্যবহারকারীর নাম</h2>
+                <p id="displayEmail">user@example.com</p>
+                <div class="profile-actions">
+                    <button id="logoutBtn" class="logout-btn">লগআউট</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <section class="content-section">
+            <h3>নোটিফিকেশন</h3>
+            <ul id="notificationsList"></ul>
+            <p id="noNotificationsMessage" style="display: none; text-align: center; padding: 20px; color: var(--text-light);">আপনার জন্য কোনো নোটিফিকেশন নেই।</p>
+        </section>
+
+        <!-- My Apps Section -->
+        <section class="content-section">
+            <h3>আমার আপলোড করা অ্যাপস</h3>
+            <div id="myAppsGrid"></div>
+            <p id="noAppsMessage" style="display: none; text-align: center; padding: 20px; color: var(--text-light);">আপনি এখনো কোনো অ্যাপ আপলোড করেননি।</p>
+        </section>
+    </main>
+
+    <script type="module">
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getDatabase, ref, query, orderByChild, equalTo, onValue, update } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { auth } from './firebase-config.js';
+
+        const mainContent = document.getElementById('mainContent'), profilePic = document.getElementById('profilePic');
+        const displayName = document.getElementById('displayName'), displayEmail = document.getElementById('displayEmail');
+        const logoutBtn = document.getElementById('logoutBtn'), myAppsGrid = document.getElementById('myAppsGrid');
+        const noAppsMessage = document.getElementById('noAppsMessage');
+        const notificationsList = document.getElementById('notificationsList'), noNotificationsMessage = document.getElementById('noNotificationsMessage');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                mainContent.style.display = 'block';
+                displayUserInfo(user);
+                loadUserApps(user.email);
+                loadNotifications(user.uid); // Load notifications for the logged-in user
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function displayUserInfo(user) {
+            profilePic.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=667eea&color=fff`;
+            displayName.textContent = user.displayName || 'No Name Set';
+            displayEmail.textContent = user.email;
+        }
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = 'index.html');
+        });
+
+        function loadUserApps(userEmail) {
+            const db = getDatabase();
+            const userAppsQuery = query(ref(db, 'apps'), orderByChild('uploadedBy'), equalTo(userEmail));
+            onValue(userAppsQuery, (snapshot) => {
+                myAppsGrid.innerHTML = '';
+                noAppsMessage.style.display = snapshot.exists() ? 'none' : 'block';
+                snapshot.forEach((child) => {
+                    const app = child.val();
+                    myAppsGrid.innerHTML += `<div class="app-card-small"><img src="${app.iconUrl}" alt="${app.name}"><h4>${app.name}</h4></div>`;
+                });
+            });
+        }
+        
+        function loadNotifications(userId) {
+            const db = getDatabase();
+            const notificationsRef = ref(db, `notifications/${userId}`);
+            onValue(query(notificationsRef, orderByChild('timestamp')), (snapshot) => {
+                notificationsList.innerHTML = '';
+                noNotificationsMessage.style.display = snapshot.exists() ? 'none' : 'block';
+                snapshot.forEach((child) => {
+                    const notificationId = child.key;
+                    const notification = child.val();
+                    const item = document.createElement('li');
+                    item.className = 'notification-item' + (!notification.read ? ' unread' : '');
+                    item.dataset.id = notificationId;
+                    item.innerHTML = `
+                        <p>আপনার অ্যাপ "<strong>${notification.appName}</strong>" সম্পর্কে একটি আপডেট:</p>
+                        <p style="color:#333;">${notification.message}</p>
+                        <small>${new Date(notification.timestamp).toLocaleString()}</small>
+                    `;
+                    // Add click event to mark as read
+                    if (!notification.read) {
+                        item.addEventListener('click', () => {
+                            update(ref(db, `notifications/${userId}/${notificationId}`), { read: true });
+                        });
+                    }
+                    notificationsList.prepend(item); // Show newest first
+                });
+            });
+        }
+    </script>
+</body>
+</html>```
