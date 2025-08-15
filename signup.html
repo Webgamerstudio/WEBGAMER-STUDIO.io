@@ -20,6 +20,10 @@
             justify-content: center;
             color: #333;
             padding: 20px 0;
+            /* Disable text selection */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
         }
 
         .signup-container {
@@ -74,6 +78,10 @@
             transition: all 0.3s ease;
             background: #f8f9fa;
             font-family: inherit;
+            /* Re-enable text selection for input fields */
+            -webkit-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
         }
 
         .form-group input:focus {
@@ -281,7 +289,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
     <div class="signup-container fade-in">
         <div class="signup-header">
             <h1>Create Account</h1>
@@ -446,7 +454,7 @@
         // Check if username is unique
         async function isUsernameUnique(username) {
             try {
-                const usernameRef = ref(db, 'usernames/' + username);
+                const usernameRef = ref(db, 'usernames/' + username.toLowerCase()); // Check lowercase for case-insensitivity
                 const snapshot = await get(usernameRef);
                 return !snapshot.exists();
             } catch (error) {
@@ -509,8 +517,8 @@
                 return false;
             }
 
-            if (password.length < 6) {
-                showError('Password must be at least 6 characters long');
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters long');
                 passwordInput.focus();
                 return false;
             }
@@ -528,6 +536,7 @@
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             clearMessages();
+            
             setLoading(true);
 
             if (await validateForm()) {
@@ -552,8 +561,8 @@
                         createdAt: Date.now()
                     });
 
-                    // Store username to check uniqueness
-                    await set(ref(db, 'usernames/' + username), {
+                    // Store username to check uniqueness (store in lowercase for case-insensitive check)
+                    await set(ref(db, 'usernames/' + username.toLowerCase()), {
                         uid: user.uid
                     });
 
@@ -580,7 +589,7 @@
                             errorMessage = 'Insufficient permissions to save user data. Please contact support.';
                             break;
                         default:
-                            errorMessage = error.message;
+                            errorMessage = 'An unexpected error occurred. Please try again.';
                     }
                     showError(errorMessage);
                     console.error('Signup error:', error);
@@ -600,13 +609,17 @@
             // Add focus effects to inputs
             const inputs = document.querySelectorAll('input');
             inputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    input.parentNode.style.transform = 'scale(1.02)';
-                });
-                
-                input.addEventListener('blur', () => {
-                    input.parentNode.style.transform = 'scale(1)';
-                });
+                const parent = input.closest('.form-group');
+                if(parent) {
+                    input.addEventListener('focus', () => {
+                        parent.style.transform = 'scale(1.02)';
+                        parent.style.transition = 'transform 0.2s ease-out';
+                    });
+                    
+                    input.addEventListener('blur', () => {
+                        parent.style.transform = 'scale(1)';
+                    });
+                }
             });
 
             // Auto-focus username input
