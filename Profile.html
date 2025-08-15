@@ -115,10 +115,12 @@
     <main id="mainContent" style="display: none;">
         <div class="profile-header">
             <div class="profile-main">
-                <img id="profilePic" src="https://via.placeholder.com/120" alt="Profile Picture">
+                <!-- Change 2: Added class="profile-pic" to the img tag -->
+                <img id="profilePic" class="profile-pic" src="https://via.placeholder.com/120" alt="Profile Picture">
                 <div class="profile-info">
                     <h2 id="displayName">User Name</h2>
-                    <p id="displayEmail">user@example.com</p>
+                    <!-- Change 1: Added style="display: none;" to hide the email -->
+                    <p id="displayEmail" style="display: none;">user@example.com</p>
                     <p id="userBio"></p>
                     <div class="profile-stats">
                         <div class="stat-item" onclick="switchTab('apps')">
@@ -313,6 +315,7 @@
             }
             
             document.getElementById('displayName').textContent = profileUser.username || 'N/A';
+            // The following line is still here but the element is hidden via CSS
             document.getElementById('displayEmail').textContent = profileUser.email;
             document.getElementById('userBio').textContent = profileUser.bio || '';
             document.getElementById('profilePic').src = profileUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profileUser.username || 'U')}&background=667eea&color=fff&size=128`;
