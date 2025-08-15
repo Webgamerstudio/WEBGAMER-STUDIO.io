@@ -1,262 +1,83 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Store - হোম</title>
+    <title>AR Store - Home</title>
     <style>
         :root {
-            --primary-color: #667eea;
-            --primary-hover: #5a67d8;
-            --text-dark: #2c3e50;
-            --text-light: #555;
-            --bg-light: #f8f9fa;
-            --border-color: #e0e0e0;
-            --white: #ffffff;
-            --danger-color: #e53e3e;
-            --success-color: #38a169;
+            --primary-color: #667eea; --primary-hover: #5a67d8; --text-dark: #2c3e50;
+            --text-light: #555; --bg-light: #f8f9fa; --border-color: #e0e0e0; --white: #ffffff;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: 'Segoe UI', 'Roboto', sans-serif; background: var(--bg-light); color: var(--text-dark);
+            -webkit-user-select: none; user-select: none;
         }
-
-        /* Header */
         header {
-            background: var(--white);
-            padding: 15px 5%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
         }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .menu-toggle { 
-            font-size: 24px; 
-            cursor: pointer; 
-            background: none; 
-            border: none; 
-            color: var(--primary-color); 
-            display: none; 
-        }
-        .logo h1 { 
-            font-size: 1.6em; 
-            font-weight: 700; 
-            color: var(--text-dark); 
-        }
-        .nav-menu { 
-            display: flex; 
-            gap: 20px; 
-            align-items: center;
-        }
-        .nav-menu a { 
-            color: var(--text-light); 
-            text-decoration: none; 
-            font-weight: 500; 
-            transition: color 0.3s; 
-        }
-        .nav-menu a:hover { 
-            color: var(--primary-color); 
-        }
-        .auth-options a { 
-            text-decoration: none; 
-            font-weight: 600; 
-            padding: 8px 18px; 
-            border-radius: 6px; 
-            transition: all 0.3s; 
-        }
-        .login-btn { 
-            border: 2px solid var(--primary-color); 
-            color: var(--primary-color); 
-        }
-        .login-btn:hover { 
-            background: var(--primary-color); 
-            color: var(--white); 
-        }
-        .profile-btn { 
-            width: 40px; 
-            height: 40px; 
-            background: var(--primary-color); 
-            color: var(--white); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.1em; 
-        }
-
-        /* Main Content */
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .menu-toggle { font-size: 24px; cursor: pointer; background: none; border: none; color: var(--primary-color); display: none; }
+        .logo h1 { font-size: 1.6em; font-weight: 700; color: var(--text-dark); }
+        .nav-menu { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .nav-menu a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .auth-options a { text-decoration: none; font-weight: 600; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
+        .login-btn { border: 2px solid var(--primary-color); color: var(--primary-color); }
+        .login-btn:hover { background: var(--primary-color); color: var(--white); }
+        .profile-btn { width: 40px; height: 40px; background: var(--primary-color); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1em; }
         main { padding: 20px 5%; }
-        .store-controls {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        #searchInput {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            font-size: 1em;
-            outline: none;
-            transition: box-shadow 0.3s;
-        }
+        .store-controls { display: flex; justify-content: center; margin-bottom: 30px; }
+        #searchInput { width: 100%; max-width: 500px; padding: 12px 20px; border: 1px solid var(--border-color); border-radius: 50px; font-size: 1em; outline: none; transition: box-shadow 0.3s; }
         #searchInput:focus { box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3); }
-
-        /* App Grid */
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-        .app-card {
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; }
+        .app-card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; text-align: center; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; }
         .app-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .app-card img {
-            width: 65px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 18px;
-        }
-        .app-card h3 {
-            font-size: 1em;
-            color: var(--text-dark);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-        .app-card .downloads { font-size: 0.8em; color: var(--text-light); }
+        .app-card img { width: 65px; height: 65px; object-fit: cover; border-radius: 18px; }
+        .app-card h3 { font-size: 1em; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; margin-top: 10px; }
         .no-apps-message { text-align: center; font-size: 1.2em; color: var(--text-light); padding: 50px 0; }
+        .load-more-container { text-align: center; margin-top: 30px; }
+        #loadMoreBtn { background: var(--primary-color); color: var(--white); padding: 12px 30px; border: none; border-radius: 50px; font-size: 1em; font-weight: 600; cursor: pointer; transition: background 0.3s; }
 
-        /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: none; align-items: center;
-            justify-content: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-container {
-            background: var(--white); padding: 30px; border-radius: 15px;
-            width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;
-            transform: scale(0.9); transition: transform 0.3s ease;
-        }
-        .modal-overlay.active .modal-container { transform: scale(1); }
-        .modal-header { display: flex; gap: 20px; align-items: flex-start; }
-        .modal-header img { width: 100px; height: 100px; border-radius: 25px; }
-        .modal-info h2 { font-size: 1.8em; margin-bottom: 5px; }
-        .modal-info p { margin-bottom: 10px; color: var(--text-light); }
-        .modal-body { margin-top: 20px; }
-        .modal-body h4 { font-size: 1.2em; margin-bottom: 10px; border-top: 1px solid var(--border-color); padding-top: 15px; }
-        .modal-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .modal-actions .download-btn {
-            background: var(--primary-color); color: var(--white); padding: 12px 25px;
-            text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s;
-        }
-        .modal-actions .download-btn:hover { background: var(--primary-hover); }
-        .modal-close-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; background: none; border: none; cursor: pointer; color: #aaa; }
-        #comment-form textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; resize: vertical; }
-        #comment-form button { background: var(--primary-color); color: var(--white); padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
-        #comment-list { max-height: 200px; overflow-y: auto; margin-top: 15px; }
-        .comment { background: var(--bg-light); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
-        .admin-controls { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
-        .admin-controls input, .admin-controls textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 6px; }
-        .save-btn { background: var(--success-color); margin-right: 10px; }
-        .delete-btn { background: var(--danger-color); }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            padding: 12px 25px; border-radius: 50px; color: var(--white); opacity: 0;
-            visibility: hidden; transition: opacity 0.5s, visibility 0.5s; z-index: 3000;
-        }
-        .toast.show { opacity: 1; visibility: visible; }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .app-grid { grid-template-columns: repeat(3, 1fr); }
-        }
         @media (max-width: 768px) {
             header { padding: 15px 20px; }
             .menu-toggle { display: block; }
-            .nav-menu {
-                display: none; position: absolute; top: 65px;
-                left: 0; width: 100%; background: var(--white); flex-direction: column;
-                padding: 10px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.1); text-align: center;
-            }
+            .nav-menu { display: none; position: absolute; top: 65px; left: 0; width: 100%; background: var(--white); flex-direction: column; padding: 10px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
             .nav-menu.active { display: flex; }
-            .app-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .app-grid { gap: 15px; }
-            .app-card h3 { font-size: 0.9em; }
+            .app-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
     <header>
         <div class="header-left">
             <button class="menu-toggle" id="menuToggle">☰</button>
-            <div class="logo"><h1>AR Store</h1></div>
+            <div class="logo"><h1><a href="index.html" style="text-decoration: none; color: inherit;">AR Store</a></h1></div>
         </div>
         <nav class="nav-menu" id="navMenu">
-            <a href="index.html">হোম</a>
-            <a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/admin_developer.html">ডেভেলপার</a>
-            <a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/Profile.html">প্রোফাইল</a>
-            <a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/Settings.html">সেটিংস</a>
-            <a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/Connect.html">কানেক্ট</a>
-            <a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/Terms%20of%20Service.html">টার্মস অফ সার্ভিস</a>
-            <a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/Privacy%20Policy.html">প্রাইভেসি পলিসি</a>
+            <a href="index.html">Home</a>
+           
+            <a href="Profile.html">Profile</a>
         </nav>
-        <div class="auth-options" id="authOptions"><a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/login.html" class="login-btn">লগইন</a></div>
+        <div class="auth-options" id="authOptions"><a href="login.html" class="login-btn">Login</a></div>
     </header>
 
     <main>
         <div class="store-controls">
-            <input type="text" id="searchInput" placeholder="অ্যাপ সার্চ করুন...">
+            <input type="text" id="searchInput" placeholder="Search for apps...">
         </div>
         <div id="appGrid" class="app-grid"></div>
-        <p id="noAppsMessage" class="no-apps-message" style="display: none;">কোনো অনুমোদিত অ্যাপ পাওয়া যায়নি।</p>
-    </main>
-
-    <div id="appModal" class="modal-overlay">
-        <div class="modal-container">
-            <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
-            <div id="modalContent"></div>
+        <p id="noAppsMessage" class="no-apps-message" style="display: none;">No approved apps found.</p>
+        
+        <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+            <button id="loadMoreBtn">Load More</button>
         </div>
-    </div>
+    </main>
     
-    <div id="toast" class="toast"></div>
-
     <script type="module">
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getDatabase, ref, onValue, update, remove, get, set, increment, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { getDatabase, ref, onValue, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
         import { auth } from './firebase-config.js';
 
         const db = getDatabase();
@@ -266,34 +87,14 @@
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
         const searchInput = document.getElementById('searchInput');
-        const appModal = document.getElementById('appModal');
-        const modalContent = document.getElementById('modalContent');
-        const modalCloseBtn = document.getElementById('modalCloseBtn');
-        const toast = document.getElementById('toast');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-        const ADMIN_EMAILS = ['ainetworkmining22@gmail.com', 'abdulrohimrire013@gmail.com', 'katomineconnect@gmail.com'];
-        let currentUser = null;
-        let approvedApps = {};
+        const APPS_TO_SHOW_INITIALLY = 24;
+        let allApprovedApps = {};
+        let sortedAppEntries = [];
 
         menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
-        modalCloseBtn.addEventListener('click', () => appModal.classList.remove('active'));
-        appModal.addEventListener('click', (e) => e.target === appModal && appModal.classList.remove('active'));
-
-        function showToast(message, type = 'success') {
-            toast.textContent = message;
-            toast.className = `toast show ${type}`;
-            setTimeout(() => { toast.className = 'toast'; }, 3000);
-        }
-
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filtered = Object.fromEntries(
-                Object.entries(approvedApps).filter(([_, app]) => 
-                    app.name.toLowerCase().includes(searchTerm)
-                )
-            );
-            renderApps(filtered);
-        });
 
         function renderApps(appsToRender) {
             appGrid.innerHTML = '';
@@ -303,138 +104,60 @@
             appEntries.forEach(([appId, app]) => {
                 const card = document.createElement('div');
                 card.className = 'app-card';
-                card.dataset.appId = appId;
                 card.innerHTML = `
                     <img src="${app.iconUrl || 'https://via.placeholder.com/65'}" alt="${app.name}" onerror="this.src='https://via.placeholder.com/65'">
                     <h3>${app.name}</h3>
-                    <p class="downloads">ডাউনলোড: ${app.downloadCount || 0}</p>
                 `;
-                card.addEventListener('click', () => openModal(appId, app));
+                // **Change**: On click, redirect to the details page
+                card.addEventListener('click', () => {
+                    window.location.href = `App_Details.html?id=${appId}`;
+                });
                 appGrid.appendChild(card);
             });
         }
         
-        async function openModal(appId, app) {
-            const commentsRef = ref(db, `apps/${appId}/comments`);
-            const commentsSnapshot = await get(commentsRef);
-            let commentsHtml = '<p>এখনো কোনো কমেন্ট নেই।</p>';
-            if (commentsSnapshot.exists()) {
-                commentsHtml = '';
-                commentsSnapshot.forEach(cs => {
-                    const comment = cs.val();
-                    commentsHtml += `<div class="comment"><p>${comment.text}</p><small>By: ${comment.user} on ${new Date(comment.timestamp).toLocaleDateString()}</small></div>`;
-                });
+        function displayInitialApps() {
+            const initialAppsToShow = Object.fromEntries(sortedAppEntries.slice(0, APPS_TO_SHOW_INITIALLY));
+            renderApps(initialAppsToShow);
+
+            loadMoreContainer.style.display = sortedAppEntries.length > APPS_TO_SHOW_INITIALLY ? 'block' : 'none';
+        }
+
+        loadMoreBtn.addEventListener('click', () => {
+            renderApps(allApprovedApps);
+            loadMoreContainer.style.display = 'none';
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            if (!searchTerm) {
+                displayInitialApps();
+                return;
             }
-
-            let adminControls = '';
-            if (currentUser && (app.uploadedByUid === currentUser.uid || ADMIN_EMAILS.includes(currentUser.email))) {
-                adminControls = `
-                    <div class="admin-controls">
-                        <h4>অ্যাডমিন কন্ট্রোল</h4>
-                        <input type="text" id="editName_${appId}" value="${app.name}" placeholder="App Name">
-                        <textarea id="editDesc_${appId}" placeholder="Description">${app.description}</textarea>
-                        <input type="text" id="editLink_${appId}" value="${app.link}" placeholder="Download Link">
-                        <input type="text" id="editIcon_${appId}" value="${app.iconUrl}" placeholder="Icon URL">
-                        <button class="save-btn" data-appid="${appId}">সেইভ করুন</button>
-                        <button class="delete-btn" data-appid="${appId}">ডিলিট করুন</button>
-                    </div>`;
-            }
-
-            modalContent.innerHTML = `
-                <div class="modal-header">
-                    <img src="${app.iconUrl || 'https://via.placeholder.com/100'}" alt="${app.name}" onerror="this.src='https://via.placeholder.com/100'">
-                    <div class="modal-info">
-                        <h2>${app.name}</h2>
-                        <p>${app.description || 'কোনো বিবরণ নেই।'}</p>
-                        <div class="modal-actions">
-                            <a href="${app.link}" class="download-btn" target="_blank" data-appid="${appId}">ডাউনলোড করুন</a>
-                            <span>${app.downloadCount || 0} ডাউনলোড</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <h4>কমেন্টস</h4>
-                    <div id="comment-list">${commentsHtml}</div>
-                    <form id="comment-form" data-appid="${appId}"><textarea placeholder="আপনার কমেন্ট লিখুন..." required></textarea><button type="submit">কমেন্ট করুন</button></form>
-                    ${adminControls}
-                </div>`;
-            appModal.classList.add('active');
-            addModalEventListeners(appId);
-        }
-
-        function addModalEventListeners(appId) {
-            document.getElementById('comment-form')?.addEventListener('submit', handleCommentSubmit);
-            document.querySelector(`.download-btn[data-appid="${appId}"]`)?.addEventListener('click', handleDownload, { once: true });
-            document.querySelector(`.save-btn[data-appid="${appId}"]`)?.addEventListener('click', handleAppUpdate);
-            document.querySelector(`.delete-btn[data-appid="${appId}"]`)?.addEventListener('click', handleAppDelete);
-        }
-
-        function handleDownload(e) {
-            update(ref(db), { [`/apps/${e.target.dataset.appid}/downloadCount`]: increment(1) });
-        }
-        
-        function handleCommentSubmit(e) {
-            e.preventDefault();
-            const appId = e.target.dataset.appid;
-            const text = e.target.querySelector('textarea').value.trim();
-            if (!text) return showToast('কমেন্ট খালি রাখা যাবে না।', 'error');
-            if (!currentUser) return showToast('কমেন্ট করার জন্য লগইন করুন।', 'error');
-            
-            const newCommentRef = ref(db, `apps/${appId}/comments/${Date.now()}`);
-            set(newCommentRef, {
-                text: text, user: currentUser.displayName || currentUser.email, timestamp: Date.now()
-            }).then(() => {
-                showToast('কমেন্ট যোগ করা হয়েছে!');
-                openModal(appId, approvedApps[appId]);
-            }).catch(err => showToast('কমেন্ট যোগ করতে সমস্যা হয়েছে।', 'error'));
-        }
-
-        function handleAppUpdate(e) {
-            const appId = e.target.dataset.appid;
-            const updates = {
-                name: document.getElementById(`editName_${appId}`).value.trim(),
-                description: document.getElementById(`editDesc_${appId}`).value.trim(),
-                link: document.getElementById(`editLink_${appId}`).value.trim(),
-                iconUrl: document.getElementById(`editIcon_${appId}`).value.trim()
-            };
-            update(ref(db, `apps/${appId}`), updates)
-                .then(() => { showToast('অ্যাপ আপডেট হয়েছে!'); appModal.classList.remove('active'); })
-                .catch(err => showToast('আপডেট করতে সমস্যা হয়েছে।', 'error'));
-        }
-        
-        function handleAppDelete(e) {
-            const appId = e.target.dataset.appid;
-            if (confirm('আপনি কি সত্যিই এই অ্যাপটি ডিলিট করতে চান?')) {
-                remove(ref(db, `apps/${appId}`))
-                    .then(() => { showToast('অ্যাপ ডিলিট করা হয়েছে।'); appModal.classList.remove('active'); })
-                    .catch(err => showToast('ডিলিট করতে সমস্যা হয়েছে।', 'error'));
-            }
-        }
+            loadMoreContainer.style.display = 'none';
+            const filtered = Object.fromEntries(
+                Object.entries(allApprovedApps).filter(([_, app]) => 
+                    app.name.toLowerCase().includes(searchTerm)
+                )
+            );
+            renderApps(filtered);
+        });
 
         function loadApps() {
-            const db = getDatabase();
             const appsQuery = query(ref(db, 'apps'), orderByChild('status'), equalTo('approved'));
-            
             onValue(appsQuery, (snapshot) => {
-                approvedApps = snapshot.val() || {};
-                renderApps(approvedApps);
-            }, (error) => {
-                console.error('Firebase read error:', error);
-                noAppsMessage.textContent = 'অ্যাপ লোড করতে সমস্যা হচ্ছে।';
-                noAppsMessage.style.display = 'block';
-            });
+                allApprovedApps = snapshot.val() || {};
+                sortedAppEntries = Object.entries(allApprovedApps).sort(([, a], [, b]) => (b.createdAt || 0) - (a.createdAt || 0));
+                displayInitialApps();
+            }, { onlyOnce: true }); // Use onlyOnce for better performance on the home page
         }
 
         onAuthStateChanged(auth, (user) => {
-            currentUser = user;
             if (user) {
                 const userInitial = user.displayName?.charAt(0)?.toUpperCase() || user.email.charAt(0).toUpperCase();
-                authOptions.innerHTML = `<a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/Profile.html" class="profile-btn" title="Profile">${userInitial}</a>`;
-                if (ADMIN_EMAILS.includes(user.email)) {
-                    document.querySelector('a[href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/admin_developer.html"]').href = 'https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/admin_developer.html';
-                }
+                authOptions.innerHTML = `<a href="Profile.html" class="profile-btn" title="Profile">${userInitial}</a>`;
             } else {
-                authOptions.innerHTML = `<a href="https://webgamerstudio.github.io/WEBGAMER-STUDIO.io/login.html" class="login-btn">লগইন</a>`;
+                authOptions.innerHTML = `<a href="login.html" class="login-btn">Login</a>`;
             }
             loadApps();
         });
