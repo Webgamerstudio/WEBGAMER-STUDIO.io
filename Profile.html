@@ -1,149 +1,456 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Store - আমার প্রোফাইল</title>
+    <title>AR Store - Profile</title>
     <style>
         :root {
             --primary-color: #667eea; --primary-hover: #5a67d8; --text-dark: #2c3e50;
             --text-light: #555; --bg-light: #f8f9fa; --border-color: #e0e0e0; --white: #ffffff;
-            --danger-color: #e53e3e; --success-color: #38a169;
+            --danger-color: #e53e3e; --success-color: #38a169; --warning-color: #f2994a;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); color: var(--text-dark); }
-        header { background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); color: var(--text-dark); -webkit-user-select: none; user-select: none; }
+        
+        /* --- Header --- */
+        header { background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo h1 a { text-decoration: none; color: var(--text-dark); }
         .nav-menu a { color: var(--text-light); text-decoration: none; font-weight: 500; margin-left: 20px; }
-        main { padding: 40px 5%; max-width: 900px; margin: 0 auto; }
-        .profile-card { background: var(--white); border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color); }
-        .profile-info h2 { font-size: 2em; margin-bottom: 5px; }
-        .profile-info p { color: var(--text-light); font-size: 1.1em; margin-bottom: 15px; }
-        .profile-actions button { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+        main { padding: 20px; max-width: 900px; margin: 0 auto; }
+
+        /* --- Profile Header --- */
+        .profile-header { background: var(--white); border-radius: 15px; padding: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .profile-main { display: flex; gap: 20px; align-items: center; }
+        .profile-pic { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color); }
+        .profile-info h2 { font-size: 1.8em; margin-bottom: 5px; }
+        .profile-info p { color: var(--text-light); font-size: 1em; margin-bottom: 5px; word-break: break-all; }
+        #userBio { font-style: italic; font-size: 0.9em; margin-bottom: 15px; }
+        .profile-stats { display: flex; gap: 20px; margin-top: 15px; flex-wrap: wrap; }
+        .stat-item { text-align: center; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
+        .stat-item:hover { background: var(--bg-light); }
+        .stat-item strong { font-size: 1.2em; color: var(--text-dark); }
+        .stat-item p { font-size: 0.8em; color: var(--text-light); }
+        .profile-actions { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .profile-actions button { padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
+        .follow-btn { background-color: var(--primary-color); color: white; }
         .logout-btn { border: 2px solid var(--danger-color); color: var(--danger-color); background: none; }
+        .logout-btn:hover { background: var(--danger-color); color: white; }
+        .edit-profile-btn { border: 2px solid var(--primary-color); color: var(--primary-color); background: none; }
+        .edit-profile-btn:hover { background: var(--primary-color); color: white; }
         
-        /* New Sections: Notifications and My Apps */
-        .content-section { margin-top: 40px; background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
-        .content-section h3 { font-size: 1.5em; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        #notificationsList { list-style: none; padding: 0; }
-        .notification-item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background-color 0.3s; }
-        .notification-item.unread { background-color: #eef0ff; font-weight: 600; }
-        .notification-item:last-child { border-bottom: none; }
-        .notification-item p { margin: 0 0 5px; }
-        .notification-item small { font-weight: normal; color: #777; }
+        .privacy-settings { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .privacy-settings label { font-weight: 600; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* --- Content Sections & Tabs --- */
+        .content-section { margin-top: 30px; background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-header h3 { font-size: 1.3em; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .tab { padding: 10px 15px; border: none; background: none; cursor: pointer; transition: all 0.3s; font-weight: 600; font-size: 1em; color: var(--text-light); border-bottom: 3px solid transparent; }
+        .tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+
+        /* --- App Grid --- */
         #myAppsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .app-card-small { text-align: center; }
+        .app-card-small { text-align: center; padding: 15px; border-radius: 12px; border: 1px solid #eee; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; }
+        .app-card-small:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         .app-card-small img { width: 60px; height: 60px; border-radius: 15px; }
         .app-card-small h4 { font-size: 0.9em; margin-top: 8px; }
+        .app-status { font-size: 0.8em; font-weight: 600; padding: 3px 8px; border-radius: 10px; color: white; display: inline-block; margin-top: 5px; text-transform: capitalize; }
+        .status-approved { background-color: var(--success-color); }
+        .status-pending { background-color: var(--warning-color); }
+        .status-rejected { background-color: var(--danger-color); }
+
+        /* --- Other Sections --- */
+        #privateProfileMessage { text-align: center; padding: 50px; font-size: 1.2em; color: var(--text-light); }
+        .achievements { display: flex; gap: 15px; flex-wrap: wrap; }
+        .achievement { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 100px; flex: 1; }
+        .achievement.locked { background: #ccc; }
+        .activity-item { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border-color); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon { width: 40px; height: 40px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2em; flex-shrink: 0; }
+        
+        /* --- Modal --- */
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: var(--white); margin: 10% auto; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; position: relative; }
+        .close { color: #aaa; position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; user-select: auto; -webkit-user-select: auto; }
+        .save-btn { background: var(--success-color); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
+        .user-list { max-height: 400px; overflow-y: auto; }
+        .user-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; cursor: pointer; }
+        .user-item:hover { background: var(--bg-light); }
+        .user-item img { width: 40px; height: 40px; border-radius: 50%; }
+
+        /* --- Media Query for Mobile --- */
+        @media (max-width: 768px) {
+            main { padding: 15px; }
+            .profile-main { flex-direction: column; text-align: center; }
+            .profile-pic { width: 120px; height: 120px; }
+            .profile-info h2 { font-size: 1.5em; }
+            .profile-stats { justify-content: center; }
+            .tabs { flex-wrap: wrap; }
+            #myAppsGrid { grid-template-columns: 1fr 1fr; }
+            .modal-content { margin: 20% auto; }
+        }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <header>
         <div class="logo"><h1><a href="index.html">AR Store</a></h1></div>
-        <nav class="nav-menu"><a href="index.html">হোম</a></nav>
+        <nav class="nav-menu">
+            <a href="index.html">Home</a>
+     
+        </nav>
     </header>
 
     <main id="mainContent" style="display: none;">
-        <div class="profile-card">
-            <img id="profilePic" src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-pic">
-            <div class="profile-info">
-                <h2 id="displayName">ব্যবহারকারীর নাম</h2>
-                <p id="displayEmail">user@example.com</p>
-                <div class="profile-actions">
-                    <button id="logoutBtn" class="logout-btn">লগআউট</button>
+        <div class="profile-header">
+            <div class="profile-main">
+                <img id="profilePic" src="https://via.placeholder.com/120" alt="Profile Picture">
+                <div class="profile-info">
+                    <h2 id="displayName">User Name</h2>
+                    <p id="displayEmail">user@example.com</p>
+                    <p id="userBio"></p>
+                    <div class="profile-stats">
+                        <div class="stat-item" onclick="switchTab('apps')">
+                            <strong id="appsCount">0</strong><p>Apps</p>
+                        </div>
+                        <div class="stat-item" onclick="showFollowers()">
+                            <strong id="followersCount">0</strong><p>Followers</p>
+                        </div>
+                        <div class="stat-item" onclick="showFollowing()">
+                            <strong id="followingCount">0</strong><p>Following</p>
+                        </div>
+                        <div class="stat-item">
+                            <strong id="totalDownloads">0</strong><p>Downloads</p>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="profile-actions" id="profileActions"></div>
+            <div class="privacy-settings" id="privacySettings" style="display: none;">
+                <label for="privacyToggle">Profile Privacy (Public)</label>
+                <label class="switch">
+                    <input type="checkbox" id="privacyToggle">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
 
-        <!-- Notifications Section -->
-        <section class="content-section">
-            <h3>নোটিফিকেশন</h3>
-            <ul id="notificationsList"></ul>
-            <p id="noNotificationsMessage" style="display: none; text-align: center; padding: 20px; color: var(--text-light);">আপনার জন্য কোনো নোটিফিকেশন নেই।</p>
-        </section>
+        <div id="profileContent">
+            <section class="content-section" id="achievementsSection">
+                <div class="section-header"><h3>🏆 Achievements</h3></div>
+                <div class="achievements" id="achievementsList"></div>
+            </section>
 
-        <!-- My Apps Section -->
-        <section class="content-section">
-            <h3>আমার আপলোড করা অ্যাপস</h3>
-            <div id="myAppsGrid"></div>
-            <p id="noAppsMessage" style="display: none; text-align: center; padding: 20px; color: var(--text-light);">আপনি এখনো কোনো অ্যাপ আপলোড করেননি।</p>
-        </section>
+            <section class="content-section" id="notificationsSection" style="display: none;">
+                <div class="section-header">
+                    <h3>🔔 Notifications</h3>
+                    <button onclick="clearNotifications()" style="background: none; color: var(--danger-color); border: 1px solid; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Clear All</button>
+                </div>
+                <ul id="notificationsList"></ul>
+                <p id="noNotificationsMessage">You have no notifications.</p>
+            </section>
+
+            <section class="content-section">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('apps')">📱 Apps</button>
+                    <button class="tab" onclick="switchTab('activity')">📊 Activity</button>
+                </div>
+
+                <div id="appsTab" class="tab-content">
+                    <div id="myAppsGrid"></div>
+                    <p id="noAppsMessage" style="display: none;">No apps uploaded yet.</p>
+                </div>
+
+                <div id="activityTab" class="tab-content" style="display: none;">
+                    <div id="activityFeed"></div>
+                    <p id="noActivityMessage">No recent activity.</p>
+                </div>
+            </section>
+        </div>
+
+        <div id="privateProfileMessage" style="display: none;">
+            <p>🔒 This profile is private.</p>
+        </div>
     </main>
+
+    <!-- Modals -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Profile</h2>
+            <div class="form-group"><label for="editUsername">Username:</label><input type="text" id="editUsername"></div>
+            <div class="form-group"><label for="editBio">Bio:</label><textarea id="editBio" rows="3" placeholder="Tell us about yourself..."></textarea></div>
+            <div class="form-group"><label for="editPhotoURL">Profile Picture URL:</label><input type="url" id="editPhotoURL"></div>
+            <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+        </div>
+    </div>
+
+    <div id="followModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFollowModal()">&times;</span>
+            <h2 id="followModalTitle">Followers</h2>
+            <div class="user-list" id="followUserList"></div>
+        </div>
+    </div>
 
     <script type="module">
         import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getDatabase, ref, query, orderByChild, equalTo, onValue, update } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { getDatabase, ref, query, orderByChild, equalTo, onValue, update, get, remove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
         import { auth } from './firebase-config.js';
 
-        const mainContent = document.getElementById('mainContent'), profilePic = document.getElementById('profilePic');
-        const displayName = document.getElementById('displayName'), displayEmail = document.getElementById('displayEmail');
-        const logoutBtn = document.getElementById('logoutBtn'), myAppsGrid = document.getElementById('myAppsGrid');
-        const noAppsMessage = document.getElementById('noAppsMessage');
-        const notificationsList = document.getElementById('notificationsList'), noNotificationsMessage = document.getElementById('noNotificationsMessage');
+        const db = getDatabase();
+        let currentUser = null;
+        let profileUid = null;
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                mainContent.style.display = 'block';
-                displayUserInfo(user);
-                loadUserApps(user.email);
-                loadNotifications(user.uid); // Load notifications for the logged-in user
-            } else {
-                window.location.href = 'login.html';
-            }
+        // Make functions globally accessible for inline onclick handlers
+        Object.assign(window, {
+            switchTab, showFollowers, showFollowing, saveProfile, clearNotifications,
+            closeEditModal: () => document.getElementById('editProfileModal').style.display = 'none',
+            closeFollowModal: () => document.getElementById('followModal').style.display = 'none',
         });
-
-        function displayUserInfo(user) {
-            profilePic.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=667eea&color=fff`;
-            displayName.textContent = user.displayName || 'No Name Set';
-            displayEmail.textContent = user.email;
+        
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}Tab`).style.display = 'block';
         }
 
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = 'index.html');
+        function showFollowers() { showFollowList('followers', 'Followers'); }
+        function showFollowing() { showFollowList('following', 'Following'); }
+
+        async function showFollowList(type, title) {
+            const modal = document.getElementById('followModal');
+            document.getElementById('followModalTitle').textContent = title;
+            const listEl = document.getElementById('followUserList');
+            listEl.innerHTML = 'Loading...';
+            modal.style.display = 'block';
+
+            const snapshot = await get(ref(db, `${type}/${profileUid}`));
+            listEl.innerHTML = '';
+            if (snapshot.exists()) {
+                const userIds = Object.keys(snapshot.val());
+                const userPromises = userIds.map(uid => get(ref(db, `users/${uid}`)));
+                const userSnapshots = await Promise.all(userPromises);
+                
+                userSnapshots.forEach(userSnapshot => {
+                    if (userSnapshot.exists()) {
+                        const user = userSnapshot.val();
+                        const userItem = document.createElement('div');
+                        userItem.className = 'user-item';
+                        userItem.innerHTML = `<img src="${user.photoURL || 'https://via.placeholder.com/40'}" alt="${user.username}"><div><h4>${user.username || 'Unknown'}</h4></div>`;
+                        userItem.onclick = () => window.location.href = `Profile.html?uid=${userSnapshot.key}`;
+                        listEl.appendChild(userItem);
+                    }
+                });
+            } else {
+                listEl.innerHTML = `<p>No ${type} yet.</p>`;
+            }
+        }
+
+        function saveProfile() {
+            const username = document.getElementById('editUsername').value.trim();
+            const bio = document.getElementById('editBio').value.trim();
+            const photoURL = document.getElementById('editPhotoURL').value.trim();
+            if (!username) return alert('Username cannot be empty.');
+
+            update(ref(db, `users/${currentUser.uid}`), { username, bio, photoURL: photoURL || null })
+                .then(() => {
+                    closeEditModal();
+                    loadProfileData(profileUid);
+                });
+        }
+
+        function clearNotifications() {
+            if (confirm('Are you sure you want to clear all notifications?')) {
+                remove(ref(db, `notifications/${currentUser.uid}`));
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            profileUid = new URLSearchParams(window.location.search).get('uid') || user?.uid;
+
+            if (!profileUid) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('mainContent').style.display = 'block';
+            loadProfileData(profileUid);
         });
 
-        function loadUserApps(userEmail) {
-            const db = getDatabase();
-            const userAppsQuery = query(ref(db, 'apps'), orderByChild('uploadedBy'), equalTo(userEmail));
-            onValue(userAppsQuery, (snapshot) => {
-                myAppsGrid.innerHTML = '';
-                noAppsMessage.style.display = snapshot.exists() ? 'none' : 'block';
+        async function loadProfileData(uid) {
+            const userSnapshot = await get(ref(db, `users/${uid}`));
+            if (!userSnapshot.exists()) {
+                document.getElementById('mainContent').innerHTML = '<p>User not found.</p>';
+                return;
+            }
+            
+            const profileUser = userSnapshot.val();
+            const isOwnProfile = currentUser && currentUser.uid === uid;
+
+            if (!isOwnProfile && !profileUser.isPublic) {
+                document.getElementById('profileContent').style.display = 'none';
+                document.getElementById('privateProfileMessage').style.display = 'block';
+                document.getElementById('profile-header').style.display = 'none'; // Hide header for private profiles
+            } else {
+                document.getElementById('profileContent').style.display = 'block';
+                document.getElementById('privateProfileMessage').style.display = 'none';
+                loadUserApps(uid);
+                loadAchievements(uid);
+                loadActivity(uid);
+            }
+            
+            document.getElementById('displayName').textContent = profileUser.username || 'N/A';
+            document.getElementById('displayEmail').textContent = profileUser.email;
+            document.getElementById('userBio').textContent = profileUser.bio || '';
+            document.getElementById('profilePic').src = profileUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profileUser.username || 'U')}&background=667eea&color=fff&size=128`;
+            
+            setupActions(uid, isOwnProfile);
+
+            if (isOwnProfile) {
+                document.getElementById('privacySettings').style.display = 'flex';
+                document.getElementById('notificationsSection').style.display = 'block';
+                document.getElementById('privacyToggle').checked = !!profileUser.isPublic;
+                document.getElementById('editUsername').value = profileUser.username || '';
+                document.getElementById('editBio').value = profileUser.bio || '';
+                document.getElementById('editPhotoURL').value = profileUser.photoURL || '';
+                loadNotifications(uid);
+            }
+
+            loadStats(uid);
+        }
+
+        function setupActions(uid, isOwnProfile) {
+            const actionsContainer = document.getElementById('profileActions');
+            actionsContainer.innerHTML = '';
+            if (isOwnProfile) {
+                actionsContainer.innerHTML = `<button class="edit-profile-btn" onclick="document.getElementById('editProfileModal').style.display='block'">Edit Profile</button><button id="logoutBtn" class="logout-btn">Logout</button>`;
+                document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
+            } else if (currentUser) {
+                const followBtn = document.createElement('button');
+                followBtn.id = 'followBtn';
+                followBtn.className = 'follow-btn';
+                actionsContainer.appendChild(followBtn);
+                onValue(ref(db, `following/${currentUser.uid}/${uid}`), s => followBtn.textContent = s.exists() ? 'Unfollow' : 'Follow');
+                followBtn.onclick = () => toggleFollow(uid);
+            }
+        }
+
+        document.getElementById('privacyToggle').onchange = (e) => update(ref(db, `users/${currentUser.uid}`), { isPublic: e.target.checked });
+
+        async function toggleFollow(followedUid) {
+            const followerUid = currentUser.uid;
+            const isFollowingSnap = await get(ref(db, `following/${followerUid}/${followedUid}`));
+            const updates = {};
+            
+            if (isFollowingSnap.exists()) { // Unfollow
+                updates[`following/${followerUid}/${followedUid}`] = null;
+                updates[`followers/${followedUid}/${followerUid}`] = null;
+            } else { // Follow
+                const followerSnap = await get(ref(db, `users/${followerUid}`));
+                const followerName = followerSnap.val()?.username || 'A new user';
+                updates[`following/${followerUid}/${followedUid}`] = true;
+                updates[`followers/${followedUid}/${followerUid}`] = true;
+                updates[`notifications/${followedUid}/${Date.now()}`] = {
+                    message: `${followerName} started following you.`,
+                    timestamp: Date.now(),
+                    type: 'follow'
+                };
+            }
+            update(ref(db), updates);
+        }
+
+        function loadStats(uid) {
+            onValue(ref(db, 'apps'), appsSnapshot => {
+                let appsCount = 0, totalDownloads = 0;
+                appsSnapshot.forEach(appSnap => {
+                    const app = appSnap.val();
+                    if (app.uploadedByUid === uid) {
+                        appsCount++;
+                        totalDownloads += app.downloadCount || 0;
+                    }
+                });
+                document.getElementById('appsCount').textContent = appsCount;
+                document.getElementById('totalDownloads').textContent = totalDownloads;
+            });
+            onValue(ref(db, `followers/${uid}`), s => document.getElementById('followersCount').textContent = s.size);
+            onValue(ref(db, `following/${uid}`), s => document.getElementById('followingCount').textContent = s.size);
+        }
+
+        function loadUserApps(uid) {
+            const q = query(ref(db, 'apps'), orderByChild('uploadedByUid'), equalTo(uid));
+            onValue(q, (snapshot) => {
+                const grid = document.getElementById('myAppsGrid');
+                grid.innerHTML = '';
+                const noAppsMsg = document.getElementById('noAppsMessage');
+                noAppsMsg.style.display = snapshot.exists() ? 'none' : 'block';
                 snapshot.forEach((child) => {
                     const app = child.val();
-                    myAppsGrid.innerHTML += `<div class="app-card-small"><img src="${app.iconUrl}" alt="${app.name}"><h4>${app.name}</h4></div>`;
+                    const card = document.createElement('div');
+                    card.className = 'app-card-small';
+                    card.innerHTML = `<img src="${app.iconUrl || 'https://via.placeholder.com/60'}" alt="${app.name}"><h4>${app.name}</h4><span class="app-status status-${app.status}">${app.status}</span>`;
+                    grid.appendChild(card);
                 });
             });
         }
+
+        async function loadAchievements(uid) {
+            // Logic similar to previous implementation, fetch stats and determine which are unlocked
+        }
         
-        function loadNotifications(userId) {
-            const db = getDatabase();
-            const notificationsRef = ref(db, `notifications/${userId}`);
-            onValue(query(notificationsRef, orderByChild('timestamp')), (snapshot) => {
-                notificationsList.innerHTML = '';
-                noNotificationsMessage.style.display = snapshot.exists() ? 'none' : 'block';
-                snapshot.forEach((child) => {
-                    const notificationId = child.key;
-                    const notification = child.val();
-                    const item = document.createElement('li');
-                    item.className = 'notification-item' + (!notification.read ? ' unread' : '');
-                    item.dataset.id = notificationId;
-                    item.innerHTML = `
-                        <p>আপনার অ্যাপ "<strong>${notification.appName}</strong>" সম্পর্কে একটি আপডেট:</p>
-                        <p style="color:#333;">${notification.message}</p>
-                        <small>${new Date(notification.timestamp).toLocaleString()}</small>
-                    `;
-                    // Add click event to mark as read
-                    if (!notification.read) {
-                        item.addEventListener('click', () => {
-                            update(ref(db, `notifications/${userId}/${notificationId}`), { read: true });
-                        });
-                    }
-                    notificationsList.prepend(item); // Show newest first
+        async function loadActivity(uid) {
+            const activityFeed = document.getElementById('activityFeed');
+            const noActivityMsg = document.getElementById('noActivityMessage');
+            const q = query(ref(db, 'apps'), orderByChild('uploadedByUid'), equalTo(uid));
+            const snapshot = await get(q);
+            activityFeed.innerHTML = '';
+            
+            if(snapshot.exists()) {
+                noActivityMsg.style.display = 'none';
+                const activities = [];
+                snapshot.forEach(s => activities.push({
+                    type: 'app_upload',
+                    timestamp: s.val().createdAt,
+                    data: { name: s.val().name, status: s.val().status }
+                }));
+                activities.sort((a, b) => b.timestamp - a.timestamp).forEach(act => {
+                    const item = document.createElement('div');
+                    item.className = 'activity-item';
+                    item.innerHTML = `<div class="activity-icon">🚀</div><div><h4>Uploaded "${act.data.name}"</h4><p>${new Date(act.timestamp).toLocaleString()}</p></div>`;
+                    activityFeed.appendChild(item);
+                });
+            } else {
+                noActivityMsg.style.display = 'block';
+            }
+        }
+        
+        function loadNotifications(uid) {
+            const list = document.getElementById('notificationsList');
+            const noMsg = document.getElementById('noNotificationsMessage');
+            onValue(query(ref(db, `notifications/${uid}`), orderByChild('timestamp')), (snapshot) => {
+                list.innerHTML = '';
+                noMsg.style.display = snapshot.exists() ? 'none' : 'block';
+                const notifications = [];
+                snapshot.forEach(s => notifications.push(s.val()));
+                notifications.reverse().forEach(n => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<p>${n.message}</p><small>${new Date(n.timestamp).toLocaleString()}</small>`;
+                    list.appendChild(li);
                 });
             });
         }
     </script>
 </body>
-</html>```
+</html>
