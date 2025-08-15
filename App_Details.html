@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Details - AR Store</title>
+    <style>
+        :root {
+            --primary-color: #667eea; --primary-hover: #5a67d8; --text-dark: #2c3e50;
+            --text-light: #555; --bg-light: #f8f9fa; --border-color: #e0e0e0; --white: #ffffff;
+            --danger-color: #e53e3e; --success-color: #38a169; --star-color: #f39c12;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'Roboto', sans-serif; background: var(--bg-light); color: var(--text-dark); -webkit-user-select: none; user-select: none; }
+        header { background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .logo h1 a { text-decoration: none; color: var(--text-dark); }
+        main { padding: 20px; max-width: 800px; margin: 20px auto; }
+        .details-card { background: var(--white); border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow: hidden; }
+        
+        #appHeader { padding: 25px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        #appIcon { width: 100px; height: 100px; border-radius: 25px; object-fit: cover; flex-shrink: 0; }
+        .app-title h2 { font-size: 2em; margin-bottom: 5px; }
+        .app-title a { text-decoration: none; color: var(--primary-color); font-weight: 600; }
+        .app-rating-summary { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .stars { color: var(--star-color); font-size: 1.2em; }
+        
+        .app-actions { margin-top: 15px; display: flex; align-items: center; gap: 15px; }
+        .download-btn, .share-btn { padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s; border: none; cursor: pointer; }
+        .download-btn { background: var(--primary-color); color: var(--white); }
+        .share-btn { background: var(--bg-light); color: var(--text-dark); border: 1px solid var(--border-color); }
+        
+        #screenshotSection { padding: 25px; border-top: 1px solid var(--border-color); }
+        #screenshotSection h3 { margin-bottom: 15px; }
+        .screenshot-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; }
+        .screenshot-gallery img { height: 200px; border-radius: 10px; }
+
+        .tabs { display: flex; background: var(--bg-light); padding: 0 25px; }
+        .tab { padding: 15px 20px; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; }
+        .tab.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
+        .tab-content { padding: 25px; display: none; }
+        .tab-content.active { display: block; }
+        
+        #reviewSection h4, #relatedAppsSection h4 { margin-bottom: 20px; }
+        .rating-input .stars { cursor: pointer; }
+        .rating-input .stars span:hover, .rating-input .stars span.selected { color: var(--star-color); }
+        #review-form textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin: 10px 0; resize: vertical; user-select: auto; }
+        #review-form button { background: var(--primary-color); color: var(--white); padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
+        .review { background: var(--bg-light); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        .review small { color: var(--text-light); }
+        
+        .related-apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+        .related-app-card { text-align: center; cursor: pointer; }
+        .related-app-card img { width: 70px; height: 70px; border-radius: 15px; }
+        .related-app-card h5 { font-size: 0.9em; margin-top: 8px; }
+
+        #skeletonLoader { padding: 25px; } /* Basic skeleton styles */
+        .skeleton { background-color: #e0e0e0; border-radius: 4px; animation: pulse 1.5s infinite ease-in-out; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            main { padding: 0; margin: 10px; }
+            #appHeader { flex-direction: column; text-align: center; }
+            .screenshot-gallery img { height: 150px; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <header>
+        <div class="logo"><h1><a href="index.html">AR Store</a></h1></div>
+    </header>
+
+    <main>
+        <div class="details-card" id="appDetailsContainer" style="display:none;">
+            <!-- App Header -->
+            <section id="appHeader">
+                <img id="appIcon" src="" alt="App Icon">
+                <div class="app-title">
+                    <h2 id="appName"></h2>
+                    <a href="#" id="developerLink"></a>
+                    <div class="app-rating-summary">
+                        <span id="avgRatingText"></span>
+                        <div class="stars" id="avgRatingStars"></div>
+                        <small id="reviewCount"></small>
+                    </div>
+                    <div class="app-actions">
+                        <a href="#" class="download-btn" id="downloadBtn" target="_blank">Download</a>
+                        <button class="share-btn" id="shareBtn">Share</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screenshots -->
+            <section id="screenshotSection" style="display:none;">
+                <h3>Screenshots</h3>
+                <div class="screenshot-gallery" id="screenshotGallery"></div>
+            </section>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="about">About this app</div>
+                <div class="tab" data-tab="reviews">Ratings & Reviews</div>
+                <div class="tab" data-tab="related">Related Apps</div>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="aboutTab" class="tab-content active">
+                <p id="appDescription"></p>
+                <div style="margin-top: 20px; color: var(--text-light);">
+                    <p><strong>Version:</strong> <span id="appVersion"></span></p>
+                    <p><strong>Updated on:</strong> <span id="appLastUpdated"></span></p>
+                </div>
+            </div>
+
+            <div id="reviewsTab" class="tab-content">
+                <h4>Post a Review</h4>
+                <form id="review-form">
+                    <div class="rating-input">
+                        <strong>Your Rating:</strong>
+                        <div class="stars" id="userRatingStars" data-rating="0">
+                            <span data-value="1">☆</span><span data-value="2">☆</span><span data-value="3">☆</span><span data-value="4">☆</span><span data-value="5">☆</span>
+                        </div>
+                    </div>
+                    <textarea placeholder="Tell others what you think..." required></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="review-list" style="margin-top:20px;"></div>
+            </div>
+
+            <div id="relatedTab" class="tab-content">
+                <h4>More by this developer</h4>
+                <div class="related-apps-grid" id="relatedAppsGrid"></div>
+            </div>
+        </div>
+
+        <div id="skeletonLoader"> <!-- Skeleton loader -->
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div class="skeleton" style="width: 100px; height: 100px; border-radius: 25px;"></div>
+                <div style="flex: 1;">
+                    <div class="skeleton" style="width: 70%; height: 30px; margin-bottom: 10px;"></div>
+                    <div class="skeleton" style="width: 40%; height: 20px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getDatabase, ref, onValue, get, update, set, remove, increment, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { auth } from './firebase-config.js';
+
+        const db = getDatabase();
+        const appId = new URLSearchParams(window.location.search).get('id');
+        let currentUser = null;
+
+        onAuthStateChanged(auth, user => {
+            currentUser = user;
+            if (appId) loadAppDetails(appId);
+            else document.querySelector('main').innerHTML = '<p>Error: No app ID provided.</p>';
+        });
+
+        async function loadAppDetails(appId) {
+            const appRef = ref(db, `apps/${appId}`);
+            const appSnapshot = await get(appRef);
+
+            if (!appSnapshot.exists()) {
+                document.querySelector('main').innerHTML = '<p>App not found.</p>';
+                return;
+            }
+
+            const app = appSnapshot.val();
+            document.title = `${app.name} - AR Store`;
+            renderAppDetails(appId, app);
+
+            // Hide loader, show content
+            document.getElementById('skeletonLoader').style.display = 'none';
+            document.getElementById('appDetailsContainer').style.display = 'block';
+        }
+
+        function renderAppDetails(appId, app) {
+            // Header
+            document.getElementById('appName').textContent = app.name;
+            document.getElementById('appIcon').src = app.iconUrl || 'https://via.placeholder.com/100';
+            document.getElementById('developerLink').textContent = `by ${app.uploadedBy || 'Unknown'}`;
+            document.getElementById('developerLink').href = `Profile.html?uid=${app.uploadedByUid}`;
+            document.getElementById('downloadBtn').href = app.link;
+
+            // About Tab
+            document.getElementById('appDescription').innerHTML = app.description.replace(/\n/g, '<br>') || 'No description.';
+            document.getElementById('appVersion').textContent = app.version || '1.0';
+            document.getElementById('appLastUpdated').textContent = new Date(app.createdAt).toLocaleDateString();
+
+            // Screenshots
+            if (app.screenshots) {
+                document.getElementById('screenshotSection').style.display = 'block';
+                const gallery = document.getElementById('screenshotGallery');
+                gallery.innerHTML = '';
+                app.screenshots.split(',').forEach(url => {
+                    gallery.innerHTML += `<img src="${url.trim()}" alt="screenshot">`;
+                });
+            }
+
+            // Load dynamic parts
+            loadReviews(appId);
+            loadRelatedApps(app.uploadedByUid, appId);
+            addEventListeners(appId, app);
+        }
+        
+        function loadReviews(appId) {
+            const reviewsRef = ref(db, `apps/${appId}/reviews`);
+            onValue(reviewsRef, (snapshot) => {
+                const reviewList = document.getElementById('review-list');
+                reviewList.innerHTML = '';
+                let totalRating = 0, reviewCount = 0;
+
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const review = child.val();
+                        totalRating += review.rating;
+                        reviewCount++;
+                        const reviewDiv = document.createElement('div');
+                        reviewDiv.className = 'review';
+                        reviewDiv.innerHTML = `
+                            <div class="stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                            <p>${review.text}</p>
+                            <small>By: ${review.user} on ${new Date(review.timestamp).toLocaleDateString()}</small>
+                        `;
+                        reviewList.prepend(reviewDiv);
+                    });
+                } else {
+                    reviewList.innerHTML = '<p>No reviews yet. Be the first!</p>';
+                }
+                
+                // Update average rating
+                const avgRating = reviewCount > 0 ? (totalRating / reviewCount).toFixed(1) : 0;
+                document.getElementById('avgRatingText').textContent = avgRating;
+                document.getElementById('avgRatingStars').innerHTML = '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating));
+                document.getElementById('reviewCount').textContent = `(${reviewCount} reviews)`;
+            });
+        }
+        
+        function loadRelatedApps(developerUid, currentAppId) {
+            const q = query(ref(db, 'apps'), orderByChild('uploadedByUid'), equalTo(developerUid));
+            onValue(q, (snapshot) => {
+                const grid = document.getElementById('relatedAppsGrid');
+                grid.innerHTML = '';
+                let count = 0;
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        if (child.key !== currentAppId && count < 5) { // Show up to 5 other apps
+                            const app = child.val();
+                            const card = document.createElement('div');
+                            card.className = 'related-app-card';
+                            card.innerHTML = `<img src="${app.iconUrl}"><h5 style="margin-top: 5px;">${app.name}</h5>`;
+                            card.onclick = () => window.location.href = `App_Details.html?id=${child.key}`;
+                            grid.appendChild(card);
+                            count++;
+                        }
+                    });
+                }
+                if(count === 0) grid.innerHTML = '<p>No other apps by this developer.</p>';
+            }, { onlyOnce: true });
+        }
+
+        function addEventListeners(appId, app) {
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelector('.tab.active').classList.remove('active');
+                    document.querySelector('.tab-content.active').classList.remove('active');
+                    tab.classList.add('active');
+                    document.getElementById(`${tab.dataset.tab}Tab`).classList.add('active');
+                });
+            });
+
+            // Download count
+            document.getElementById('downloadBtn').addEventListener('click', () => {
+                update(ref(db, `apps/${appId}`), { downloadCount: increment(1) });
+            }, { once: true });
+
+            // Share button
+            document.getElementById('shareBtn').addEventListener('click', () => shareApp(app));
+
+            // Review submission
+            const stars = document.querySelectorAll('#userRatingStars span');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const rating = star.dataset.value;
+                    document.getElementById('userRatingStars').dataset.rating = rating;
+                    stars.forEach(s => s.innerHTML = s.dataset.value <= rating ? '★' : '☆');
+                });
+            });
+
+            document.getElementById('review-form').addEventListener('submit', (e) => handleReviewSubmit(e, appId));
+        }
+        
+        async function handleReviewSubmit(e, appId) {
+            e.preventDefault();
+            const text = e.target.querySelector('textarea').value.trim();
+            const rating = parseInt(document.getElementById('userRatingStars').dataset.rating);
+            if (!rating) return alert('Please select a star rating.');
+            if (!currentUser) return alert('Please log in to leave a review.');
+
+            const reviewRef = ref(db, `apps/${appId}/reviews/${currentUser.uid}`); // One review per user
+            await set(reviewRef, {
+                rating, text, user: currentUser.displayName || currentUser.email, timestamp: Date.now()
+            });
+            e.target.reset();
+            document.querySelectorAll('#userRatingStars span').forEach(s => s.innerHTML = '☆');
+        }
+
+        function shareApp(app) {
+            const shareData = {
+                title: app.name,
+                text: `Check out ${app.name} on AR Store!`,
+                url: window.location.href
+            };
+            if (navigator.share && navigator.canShare(shareData)) {
+                navigator.share(shareData);
+            } else {
+                alert(`Share this link: ${window.location.href}`);
+            }
+        }
+    </script>
+</body>
+</html>
