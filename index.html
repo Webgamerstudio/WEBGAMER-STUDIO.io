@@ -26,7 +26,27 @@
         .auth-options a { text-decoration: none; font-weight: 600; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
         .login-btn { border: 2px solid var(--primary-color); color: var(--primary-color); }
         .login-btn:hover { background: var(--primary-color); color: var(--white); }
-        .profile-btn { width: 40px; height: 40px; background: var(--primary-color); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1em; }
+        
+        /* Change: Switched to using background-image for robustness */
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color); /* Fallback for text initial */
+            color: var(--white);
+            font-size: 1.1em;
+            text-decoration: none;
+            padding: 0;
+
+            /* Properties to handle the background image */
+            background-size: cover;       /* This ensures the image covers the area */
+            background-position: center;  /* This centers the image */
+            background-repeat: no-repeat;
+        }
+
         main { padding: 20px 5%; }
         .store-controls { display: flex; justify-content: center; margin-bottom: 30px; }
         #searchInput { width: 100%; max-width: 500px; padding: 12px 20px; border: 1px solid var(--border-color); border-radius: 50px; font-size: 1em; outline: none; transition: box-shadow 0.3s; }
@@ -77,7 +97,7 @@
     
     <script type="module">
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getDatabase, ref, onValue, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { getDatabase, ref, onValue, query, orderByChild, equalTo, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
         import { auth } from './firebase-config.js';
 
         const db = getDatabase();
@@ -108,7 +128,6 @@
                     <img src="${app.iconUrl || 'https://via.placeholder.com/65'}" alt="${app.name}" onerror="this.src='https://via.placeholder.com/65'">
                     <h3>${app.name}</h3>
                 `;
-                // **Change**: On click, redirect to the details page
                 card.addEventListener('click', () => {
                     window.location.href = `App_Details.html?id=${appId}`;
                 });
@@ -149,13 +168,24 @@
                 allApprovedApps = snapshot.val() || {};
                 sortedAppEntries = Object.entries(allApprovedApps).sort(([, a], [, b]) => (b.createdAt || 0) - (a.createdAt || 0));
                 displayInitialApps();
-            }, { onlyOnce: true }); // Use onlyOnce for better performance on the home page
+            }, { onlyOnce: true });
         }
-
-        onAuthStateChanged(auth, (user) => {
+        
+        // Change: Updated logic to use background-image on the anchor tag
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userInitial = user.displayName?.charAt(0)?.toUpperCase() || user.email.charAt(0).toUpperCase();
-                authOptions.innerHTML = `<a href="Profile.html" class="profile-btn" title="Profile">${userInitial}</a>`;
+                const userRef = ref(db, `users/${user.uid}`);
+                const userSnapshot = await get(userRef);
+
+                if (userSnapshot.exists() && userSnapshot.val().photoURL) {
+                    const userData = userSnapshot.val();
+                    // Set the profile picture as a background image on the anchor tag itself
+                    authOptions.innerHTML = `<a href="Profile.html" class="profile-btn" title="Profile" style="background-image: url('${userData.photoURL}');"></a>`;
+                } else {
+                    // Fallback to showing the user's initial if no photo is available
+                    const userInitial = user.displayName?.charAt(0)?.toUpperCase() || user.email.charAt(0).toUpperCase();
+                    authOptions.innerHTML = `<a href="Profile.html" class="profile-btn" title="Profile">${userInitial}</a>`;
+                }
             } else {
                 authOptions.innerHTML = `<a href="login.html" class="login-btn">Login</a>`;
             }
