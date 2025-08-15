@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Store - Developer Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #667eea; --primary-hover: #5a67d8; --text-dark: #2c3e50;
+            --text-light: #555; --bg-light: #f8f9fa; --border-color: #e0e0e0; --white: #ffffff;
+            --success-color: #27ae60; --danger-color: #e53e3e; --pending-color: #f2994a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'segoe ui', sans-serif; background: var(--bg-light); color: var(--text-dark); -webkit-user-select: none; user-select: none; }
+        header { background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .logo h1 a { text-decoration: none; color: inherit; }
+        .nav-menu a { text-decoration: none; color: var(--text-light); margin-left: 20px; font-weight: 500; }
+        main { padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
+        
+        .stats-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.07); }
+        .stat-card h4 { color: var(--text-light); font-size: 1em; }
+        .stat-card p { font-size: 2em; font-weight: 700; color: var(--primary-color); }
+
+        .dashboard-section { background: var(--white); padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.07); }
+        .tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+        .tab { padding: 10px 20px; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; }
+        .tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .app-item-card { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border-color); }
+        .app-item-card:last-child { border-bottom: none; }
+        .app-item-icon { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
+        .app-item-info { flex-grow: 1; }
+        .status-badge { padding: 3px 8px; font-size: 0.8em; border-radius: 10px; color: white; margin-left: 10px; }
+        .status-approved { background: var(--success-color); }
+        .status-pending { background: var(--pending-color); }
+        .status-rejected { background: var(--danger-color); }
+        .app-item-actions button { background: none; border: 1px solid var(--border-color); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em; user-select: auto; }
+        .upload-btn { width: 100%; padding: 15px; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; }
+        .message { padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        .message.success { background: #e8f5e9; color: var(--success-color); }
+        .message.error { background: #ffebee; color: var(--danger-color); }
+        
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: var(--white); margin: 10% auto; padding: 25px; border-radius: 15px; width: 90%; max-width: 600px; }
+        .close-btn { float: right; font-size: 28px; cursor: pointer; }
+
+        @media (max-width: 768px) { main { padding: 15px; } .dashboard-section { padding: 20px; } }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <header>
+        <div class="logo"><h1><a href="index.html">AR Store</a></h1></div>
+        <nav class="nav-menu">
+         
+        </nav>
+    </header>
+
+    <main id="maincontent" style="visibility: hidden;">
+        <section class="stats-section">
+            <div class="stat-card"><h4>Total Apps</h4><p id="totalAppsStat">0</p></div>
+            <div class="stat-card"><h4>Approved Apps</h4><p id="approvedAppsStat">0</p></div>
+            <div class="stat-card"><h4>Total Downloads</h4><p id="totalDownloadsStat">0</p></div>
+        </section>
+
+        <div class="dashboard-section">
+            <div class="tabs">
+                <div class="tab active" data-tab="my-apps">My Apps</div>
+                <div class="tab" data-tab="upload-app">Upload New App</div>
+            </div>
+
+            <!-- My Apps Tab -->
+            <div id="my-apps-tab" class="tab-content active">
+                <div id="myAppsList"></div>
+                <p id="noAppsMessage" style="display: none; text-align: center; padding: 20px;">You haven't uploaded any apps yet.</p>
+            </div>
+
+            <!-- Upload App Tab -->
+            <div id="upload-app-tab" class="tab-content">
+                <h2>Upload New App</h2>
+                <div id="messagebox" class="message"></div>
+                <form id="uploadform">
+                    <div class="form-group"><label for="appname">App Name</label><input type="text" id="appname" required></div>
+                    <div class="form-group"><label for="appiconlink">App Icon Link</label><input type="url" id="appiconlink" required></div>
+                    <div class="form-group"><label for="appVersion">Version</label><input type="text" id="appVersion" value="1.0" required></div>
+                    <div class="form-group"><label for="appdescription">App Description</label><textarea id="appdescription" rows="4" required></textarea></div>
+                    <div class="form-group">
+                        <label for="appScreenshots">Screenshots Links (comma-separated)</label>
+                        <input type="text" id="appScreenshots" placeholder="https://link1.jpg, https://link2.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="appfilelink">Google Drive Link for App File</label>
+                        <input type="url" id="appfilelink" required>
+                        <div style="font-size: 0.85em; color: #555; background-color: #eef0ff; padding: 10px; border-radius: 8px; margin-top: 10px;">
+                            <strong>Important:</strong> Set file permission on Google Drive to <strong>"Anyone with the link"</strong>.
+                        </div>
+                    </div>
+                    <button type="submit" class="upload-btn" id="uploadbtn">Submit App</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Edit App Modal -->
+    <div id="editAppModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2>Edit App</h2>
+            <div class="form-group"><label for="edit_appname">App Name</label><input type="text" id="edit_appname" required></div>
+            <div class="form-group"><label for="edit_appiconlink">App Icon Link</label><input type="url" id="edit_appiconlink" required></div>
+            <div class="form-group"><label for="edit_appdescription">Description</label><textarea id="edit_appdescription" rows="4"></textarea></div>
+            <div class="form-group"><label for="edit_appScreenshots">Screenshots</label><input type="text" id="edit_appScreenshots"></div>
+            <div class="form-group"><label for="edit_appfilelink">Download Link</label><input type="url" id="edit_appfilelink" required></div>
+            <button class="upload-btn" id="saveChangesBtn">Save Changes</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getDatabase, ref, push, set, query, orderByChild, equalTo, onValue, update, remove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { auth } from './firebase-config.js';
+
+        const db = getDatabase();
+        let currentUser = null;
+
+        // --- Event Listeners and Initial Setup ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('maincontent').style.visibility = 'visible';
+                loadDeveloperData(user.uid);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // Tab switching logic
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.tab.active').classList.remove('active');
+                document.querySelector('.tab-content.active').classList.remove('active');
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        // --- App Data Loading and Rendering ---
+        function loadDeveloperData(uid) {
+            const userAppsQuery = query(ref(db, 'apps'), orderByChild('uploadedByUid'), equalTo(uid));
+            onValue(userAppsQuery, (snapshot) => {
+                const myAppsList = document.getElementById('myAppsList');
+                myAppsList.innerHTML = '';
+                const noAppsMessage = document.getElementById('noAppsMessage');
+                
+                let totalApps = 0, approvedApps = 0, totalDownloads = 0;
+                const apps = [];
+                snapshot.forEach(child => {
+                    apps.push({ id: child.key, ...child.val() });
+                });
+
+                if (apps.length > 0) {
+                    noAppsMessage.style.display = 'none';
+                    apps.sort((a,b) => b.createdAt - a.createdAt).forEach(app => {
+                        totalApps++;
+                        if (app.status === 'approved') approvedApps++;
+                        totalDownloads += app.downloadCount || 0;
+                        renderAppItem(app, myAppsList);
+                    });
+                } else {
+                    noAppsMessage.style.display = 'block';
+                }
+                
+                // Update stats
+                document.getElementById('totalAppsStat').textContent = totalApps;
+                document.getElementById('approvedAppsStat').textContent = approvedApps;
+                document.getElementById('totalDownloadsStat').textContent = totalDownloads;
+            });
+        }
+        
+        function renderAppItem(app, container) {
+            const card = document.createElement('div');
+            card.className = 'app-item-card';
+            card.innerHTML = `
+                <img src="${app.iconUrl}" class="app-item-icon">
+                <div class="app-item-info">
+                    <h4>${app.name} <span class="status-badge status-${app.status}">${app.status}</span></h4>
+                    <small>Downloads: ${app.downloadCount || 0}</small>
+                </div>
+                <div class="app-item-actions">
+                    <button class="edit-btn" data-app-id="${app.id}">Edit</button>
+                    <button class="delete-btn" data-app-id="${app.id}">Delete</button>
+                </div>
+            `;
+            container.appendChild(card);
+            
+            card.querySelector('.edit-btn').addEventListener('click', () => openEditModal(app));
+            card.querySelector('.delete-btn').addEventListener('click', () => deleteApp(app.id));
+        }
+
+        // --- App Upload Logic ---
+        document.getElementById('uploadform').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const uploadBtn = document.getElementById('uploadbtn');
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Submitting...';
+
+            const directDownloadLink = convertGoogleDriveLink(document.getElementById('appfilelink').value);
+            if (!directDownloadLink) {
+                showMessage('Please provide a valid Google Drive share link.', 'error');
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Submit App';
+                return;
+            }
+
+            const appData = {
+                name: document.getElementById('appname').value.trim(),
+                iconUrl: document.getElementById('appiconlink').value.trim(),
+                version: document.getElementById('appVersion').value.trim(),
+                description: document.getElementById('appdescription').value.trim(),
+                screenshots: document.getElementById('appScreenshots').value.trim(),
+                link: directDownloadLink,
+                uploadedBy: currentUser.displayName || currentUser.email,
+                uploadedByUid: currentUser.uid,
+                status: 'pending',
+                createdAt: Date.now(),
+                downloadCount: 0
+            };
+
+            const newAppRef = push(ref(db, 'apps'));
+            await set(newAppRef, appData);
+            
+            showMessage('App submitted successfully!', 'success');
+            document.getElementById('uploadform').reset();
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Submit App';
+        });
+        
+        // --- Edit Modal Logic ---
+        const editModal = document.getElementById('editAppModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const saveChangesBtn = document.getElementById('saveChangesBtn');
+        
+        function openEditModal(app) {
+            editModal.dataset.appId = app.id;
+            document.getElementById('edit_appname').value = app.name;
+            document.getElementById('edit_appiconlink').value = app.iconUrl;
+            document.getElementById('edit_appdescription').value = app.description;
+            document.getElementById('edit_appScreenshots').value = app.screenshots || '';
+            document.getElementById('edit_appfilelink').value = app.link;
+            editModal.style.display = 'block';
+        }
+
+        closeModalBtn.onclick = () => editModal.style.display = 'none';
+
+        saveChangesBtn.addEventListener('click', async () => {
+            const appId = editModal.dataset.appId;
+            const updates = {
+                name: document.getElementById('edit_appname').value,
+                iconUrl: document.getElementById('edit_appiconlink').value,
+                description: document.getElementById('edit_appdescription').value,
+                screenshots: document.getElementById('edit_appScreenshots').value,
+                link: document.getElementById('edit_appfilelink').value
+            };
+            await update(ref(db, `apps/${appId}`), updates);
+            editModal.style.display = 'none';
+        });
+
+        // --- Delete Logic ---
+        function deleteApp(appId) {
+            if (confirm('Are you sure you want to delete this app? This action cannot be undone.')) {
+                remove(ref(db, `apps/${appId}`));
+            }
+        }
+        
+        // --- Helper Functions ---
+        function showMessage(text, type) {
+            const messagebox = document.getElementById('messagebox');
+            messagebox.textContent = text;
+            messagebox.className = `message ${type}`;
+            messagebox.style.display = 'block';
+            setTimeout(() => messagebox.style.display = 'none', 4000);
+        }
+
+        function convertGoogleDriveLink(url) {
+            const match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            return match && match[1] ? `https://drive.google.com/uc?export=download&id=${match[1]}` : null;
+        }
+    </script>
+</body>
+</html>
