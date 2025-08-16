@@ -14,312 +14,575 @@
         body { font-family: 'Segoe UI', 'Roboto', sans-serif; background: var(--bg-light); color: var(--text-dark); -webkit-user-select: none; user-select: none; }
         header { background: var(--white); padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
         .logo h1 a { text-decoration: none; color: var(--text-dark); }
+        .back-btn { color: var(--primary-color); text-decoration: none; font-weight: 600; }
         main { padding: 20px; max-width: 800px; margin: 20px auto; }
         .details-card { background: var(--white); border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow: hidden; }
         
-        #appHeader { padding: 25px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-        #appIcon { width: 100px; height: 100px; border-radius: 25px; object-fit: cover; flex-shrink: 0; }
-        .app-title h2 { font-size: 2em; margin-bottom: 5px; }
-        .app-title a { text-decoration: none; color: var(--primary-color); font-weight: 600; }
-        .app-rating-summary { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-        .stars { color: var(--star-color); font-size: 1.2em; }
+        #appHeader { padding: 25px; display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+        #appIcon { width: 100px; height: 100px; border-radius: 25px; object-fit: cover; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .app-info { flex: 1; min-width: 300px; }
+        .app-title h2 { font-size: 2em; margin-bottom: 8px; color: var(--text-dark); }
+        .app-title a { text-decoration: none; color: var(--primary-color); font-weight: 600; font-size: 1.1em; }
+        .app-title a:hover { text-decoration: underline; }
+        .app-rating-summary { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
+        .stars { color: var(--star-color); font-size: 1.2em; letter-spacing: 2px; }
+        .rating-text { font-weight: 600; font-size: 1.1em; color: var(--text-dark); }
         
-        .app-actions { margin-top: 15px; display: flex; align-items: center; gap: 15px; }
-        .download-btn, .share-btn { padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s; border: none; cursor: pointer; }
-        .download-btn { background: var(--primary-color); color: var(--white); }
+        .app-actions { margin-top: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .download-btn, .share-btn { padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .download-btn { background: var(--primary-color); color: var(--white); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+        .download-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
         .share-btn { background: var(--bg-light); color: var(--text-dark); border: 1px solid var(--border-color); }
+        .share-btn:hover { background: var(--border-color); }
         
         #screenshotSection { padding: 25px; border-top: 1px solid var(--border-color); }
-        #screenshotSection h3 { margin-bottom: 15px; }
+        #screenshotSection h3 { margin-bottom: 15px; color: var(--text-dark); }
         .screenshot-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; }
-        .screenshot-gallery img { height: 200px; border-radius: 10px; }
+        .screenshot-gallery::-webkit-scrollbar { height: 6px; }
+        .screenshot-gallery::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        .screenshot-gallery img { height: 200px; border-radius: 10px; cursor: pointer; transition: transform 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .screenshot-gallery img:hover { transform: scale(1.05); }
 
-        .tabs { display: flex; background: var(--bg-light); padding: 0 25px; }
-        .tab { padding: 15px 20px; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; }
-        .tab.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
-        .tab-content { padding: 25px; display: none; }
+        .tabs { display: flex; background: var(--bg-light); padding: 0 25px; border-top: 1px solid var(--border-color); }
+        .tab { padding: 15px 20px; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .tab:hover { background: rgba(102, 126, 234, 0.1); }
+        .tab.active { border-bottom-color: var(--primary-color); color: var(--primary-color); background: rgba(102, 126, 234, 0.1); }
+        .tab-content { padding: 25px; display: none; min-height: 200px; }
         .tab-content.active { display: block; }
         
-        #reviewSection h4, #relatedAppsSection h4 { margin-bottom: 20px; }
-        .rating-input .stars { cursor: pointer; }
-        .rating-input .stars span:hover, .rating-input .stars span.selected { color: var(--star-color); }
-        #review-form textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin: 10px 0; resize: vertical; user-select: auto; }
-        #review-form button { background: var(--primary-color); color: var(--white); padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
-        .review { background: var(--bg-light); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-        .review small { color: var(--text-light); }
+        #aboutTab .app-meta { margin-top: 20px; padding: 15px; background: var(--bg-light); border-radius: 8px; }
+        #aboutTab .app-meta p { margin-bottom: 8px; }
         
-        .related-apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
-        .related-app-card { text-align: center; cursor: pointer; }
-        .related-app-card img { width: 70px; height: 70px; border-radius: 15px; }
-        .related-app-card h5 { font-size: 0.9em; margin-top: 8px; }
+        #reviewSection h4, #relatedAppsSection h4 { margin-bottom: 20px; color: var(--text-dark); }
+        .rating-input { margin: 15px 0; }
+        .rating-input .stars { cursor: pointer; font-size: 1.5em; }
+        .rating-input .stars span { transition: color 0.2s; cursor: pointer; }
+        .rating-input .stars span:hover, .rating-input .stars span.selected { color: var(--star-color); }
+        #review-form { background: var(--bg-light); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        #review-form textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin: 10px 0; resize: vertical; user-select: auto; font-family: inherit; }
+        #review-form button { background: var(--primary-color); color: var(--white); padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.3s; }
+        #review-form button:hover { background: var(--primary-hover); }
+        .review { background: var(--bg-light); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid var(--primary-color); }
+        .review .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .review .stars { margin-right: 10px; }
+        .review small { color: var(--text-light); font-size: 0.9em; }
+        .review p { margin: 10px 0; line-height: 1.6; }
+        
+        .related-apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; }
+        .related-app-card { text-align: center; cursor: pointer; padding: 15px; border-radius: 12px; transition: all 0.3s; }
+        .related-app-card:hover { background: var(--bg-light); transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .related-app-card img { width: 80px; height: 80px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .related-app-card h5 { font-size: 0.9em; margin-top: 10px; color: var(--text-dark); }
 
-        #skeletonLoader { padding: 25px; } /* Basic skeleton styles */
-        .skeleton { background-color: #e0e0e0; border-radius: 4px; animation: pulse 1.5s infinite ease-in-out; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .error-message { text-align: center; padding: 40px; color: var(--text-light); }
+        .loading-message { text-align: center; padding: 40px; color: var(--text-light); }
+        .success-message { text-align: center; padding: 15px; background: #d4edda; color: #155724; border-radius: 8px; margin: 10px 0; display: none; }
+
+        #skeletonLoader { padding: 25px; }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; border-radius: 8px; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        .platform-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--primary-color); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: 600; margin-top: 8px; }
 
         @media (max-width: 768px) {
-            main { padding: 0; margin: 10px; }
-            #appHeader { flex-direction: column; text-align: center; }
+            main { padding: 15px; margin: 10px; }
+            #appHeader { flex-direction: column; text-align: center; gap: 15px; }
+            .app-info { min-width: auto; }
             .screenshot-gallery img { height: 150px; }
+            .related-apps-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+            .app-actions { justify-content: center; }
         }
     </style>
 </head>
 <body oncontextmenu="return false;">
     <header>
         <div class="logo"><h1><a href="index.html">AR Store</a></h1></div>
+        <a href="index.html" class="back-btn">← Back to Store</a>
     </header>
 
     <main>
         <div class="details-card" id="appDetailsContainer" style="display:none;">
             <!-- App Header -->
             <section id="appHeader">
-                <img id="appIcon" src="" alt="App Icon">
-                <div class="app-title">
-                    <h2 id="appName"></h2>
-                    <a href="#" id="developerLink"></a>
+                <img id="appIcon" src="" alt="App Icon" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiNjY2MiPjxwYXRoIGQ9Ik0xMiAyLjAyYzYuMDggMCAxMS4xNSAxLjQ5IDExLjE1IDMuMzVzLTUuMDcgMy4zNC0xMS4xNSAzLjM0QzUuOTEgOC43IDAuODQgNy4yMSAwLjg0IDUuMzVTMi45MSAyLjAyIDUuOTEgMi4wMmg2LjA5em0wIDQuNzNjMy4zMSAwIDYuMDIgMS4xMiA2LjAyIDIuNSAwIDEuMzgtMi43MSAyLjUtNi4wMiAyLjUtMy4zMSAwLTYuMDItMS4xMi02LjAyLTIuNSAwLTEuMzggMi43MS0yLjUgNi4wMi0yLjV6bTAtMi41YzEuNjYgMCAzIC43NSAzIDEuNjdTMzMuNjYgNy41IDEyIDcuNXMtMy0uNzUtMy0xLjY3YzAtLjkyIDEuMzQtMS42NyAzLTEuNjd6Ii8+PC9zdmc+'">
+                <div class="app-info">
+                    <div class="app-title">
+                        <h2 id="appName">Loading...</h2>
+                        <a href="#" id="developerLink">by Developer</a>
+                        <div id="platformBadge" class="platform-badge" style="display: none;"></div>
+                    </div>
                     <div class="app-rating-summary">
-                        <span id="avgRatingText"></span>
-                        <div class="stars" id="avgRatingStars"></div>
-                        <small id="reviewCount"></small>
+                        <span id="avgRatingText" class="rating-text">0.0</span>
+                        <div class="stars" id="avgRatingStars">☆☆☆☆☆</div>
+                        <small id="reviewCount">(0 reviews)</small>
                     </div>
                     <div class="app-actions">
-                        <a href="#" class="download-btn" id="downloadBtn" target="_blank">Download</a>
-                        <button class="share-btn" id="shareBtn">Share</button>
+                        <a href="#" class="download-btn" id="downloadBtn" target="_blank">
+                            📱 Download
+                        </a>
+                        <button class="share-btn" id="shareBtn">
+                            🔗 Share
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Screenshots -->
             <section id="screenshotSection" style="display:none;">
-                <h3>Screenshots</h3>
+                <h3>📸 Screenshots</h3>
                 <div class="screenshot-gallery" id="screenshotGallery"></div>
             </section>
 
             <!-- Tabs -->
             <div class="tabs">
-                <div class="tab active" data-tab="about">About this app</div>
-                <div class="tab" data-tab="reviews">Ratings & Reviews</div>
-                <div class="tab" data-tab="related">Related Apps</div>
+                <div class="tab active" data-tab="about">📋 About this app</div>
+                <div class="tab" data-tab="reviews">⭐ Ratings & Reviews</div>
+                <div class="tab" data-tab="related">📱 Related Apps</div>
             </div>
 
             <!-- Tab Content -->
             <div id="aboutTab" class="tab-content active">
-                <p id="appDescription"></p>
-                <div style="margin-top: 20px; color: var(--text-light);">
-                    <p><strong>Version:</strong> <span id="appVersion"></span></p>
-                    <p><strong>Updated on:</strong> <span id="appLastUpdated"></span></p>
+                <p id="appDescription">Loading description...</p>
+                <div class="app-meta">
+                    <p><strong>📦 Version:</strong> <span id="appVersion">1.0</span></p>
+                    <p><strong>📅 Updated on:</strong> <span id="appLastUpdated">Unknown</span></p>
+                    <p><strong>📥 Downloads:</strong> <span id="downloadCount">0</span></p>
+                    <p><strong>👤 Developer:</strong> <span id="developerName">Unknown</span></p>
                 </div>
             </div>
 
             <div id="reviewsTab" class="tab-content">
-                <h4>Post a Review</h4>
-                <form id="review-form">
-                    <div class="rating-input">
-                        <strong>Your Rating:</strong>
-                        <div class="stars" id="userRatingStars" data-rating="0">
-                            <span data-value="1">☆</span><span data-value="2">☆</span><span data-value="3">☆</span><span data-value="4">☆</span><span data-value="5">☆</span>
-                        </div>
+                <div id="review-form">
+                    <h4>✍️ Post a Review</h4>
+                    <div id="loginPrompt" style="display: none; padding: 15px; background: #fff3cd; border-radius: 8px; margin: 10px 0; color: #856404;">
+                        Please <a href="login.html" style="color: #856404; font-weight: 600;">log in</a> to leave a review.
                     </div>
-                    <textarea placeholder="Tell others what you think..." required></textarea>
-                    <button type="submit">Submit</button>
-                </form>
-                <div id="review-list" style="margin-top:20px;"></div>
+                    <div id="successMessage" class="success-message">
+                        Review submitted successfully!
+                    </div>
+                    <form id="reviewForm" style="display: none;">
+                        <div class="rating-input">
+                            <strong>Your Rating:</strong>
+                            <div class="stars" id="userRatingStars" data-rating="0">
+                                <span data-value="1">☆</span><span data-value="2">☆</span><span data-value="3">☆</span><span data-value="4">☆</span><span data-value="5">☆</span>
+                            </div>
+                        </div>
+                        <textarea placeholder="Tell others what you think about this app..." required rows="4"></textarea>
+                        <button type="submit">📝 Submit Review</button>
+                    </form>
+                </div>
+                <div id="review-list"></div>
             </div>
 
             <div id="relatedTab" class="tab-content">
-                <h4>More by this developer</h4>
-                <div class="related-apps-grid" id="relatedAppsGrid"></div>
-            </div>
-        </div>
-
-        <div id="skeletonLoader"> <!-- Skeleton loader -->
-            <div style="display: flex; gap: 20px; align-items: center;">
-                <div class="skeleton" style="width: 100px; height: 100px; border-radius: 25px;"></div>
-                <div style="flex: 1;">
-                    <div class="skeleton" style="width: 70%; height: 30px; margin-bottom: 10px;"></div>
-                    <div class="skeleton" style="width: 40%; height: 20px;"></div>
+                <h4>📱 More by this developer</h4>
+                <div class="related-apps-grid" id="relatedAppsGrid">
+                    <div class="loading-message">Loading related apps...</div>
                 </div>
             </div>
         </div>
 
+        <div id="skeletonLoader">
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                <div class="skeleton" style="width: 100px; height: 100px; border-radius: 25px;"></div>
+                <div style="flex: 1;">
+                    <div class="skeleton" style="width: 70%; height: 30px; margin-bottom: 10px;"></div>
+                    <div class="skeleton" style="width: 40%; height: 20px; margin-bottom: 10px;"></div>
+                    <div class="skeleton" style="width: 30%; height: 15px;"></div>
+                </div>
+            </div>
+            <div class="skeleton" style="width: 100%; height: 100px; margin-bottom: 20px;"></div>
+            <div class="skeleton" style="width: 100%; height: 200px;"></div>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;">
+            <h3>❌ App not found</h3>
+            <p>The app you're looking for doesn't exist or has been removed.</p>
+            <a href="index.html" class="download-btn" style="margin-top: 20px;">🏠 Back to Home</a>
+        </div>
     </main>
 
     <script type="module">
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getDatabase, ref, onValue, get, update, set, remove, increment, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { getDatabase, ref, onValue, get, update, set, increment, query, orderByChild, equalTo, push } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
         import { auth } from './firebase-config.js';
 
         const db = getDatabase();
         const appId = new URLSearchParams(window.location.search).get('id');
         let currentUser = null;
+        let currentApp = null;
 
         onAuthStateChanged(auth, user => {
+            console.log('Auth state changed:', user ? 'User logged in' : 'No user');
             currentUser = user;
-            if (appId) loadAppDetails(appId);
-            else document.querySelector('main').innerHTML = '<p>Error: No app ID provided.</p>';
+            updateUIForAuthState();
+            if (appId) {
+                loadAppDetails(appId);
+            } else {
+                showError('No app ID provided');
+            }
         });
 
-        async function loadAppDetails(appId) {
-            const appRef = ref(db, `apps/${appId}`);
-            const appSnapshot = await get(appRef);
-
-            if (!appSnapshot.exists()) {
-                document.querySelector('main').innerHTML = '<p>App not found.</p>';
-                return;
+        function updateUIForAuthState() {
+            const loginPrompt = document.getElementById('loginPrompt');
+            const reviewForm = document.getElementById('reviewForm');
+            
+            if (currentUser) {
+                loginPrompt.style.display = 'none';
+                reviewForm.style.display = 'block';
+            } else {
+                loginPrompt.style.display = 'block';
+                reviewForm.style.display = 'none';
             }
-
-            const app = appSnapshot.val();
-            document.title = `${app.name} - AR Store`;
-            renderAppDetails(appId, app);
-
-            // Hide loader, show content
-            document.getElementById('skeletonLoader').style.display = 'none';
-            document.getElementById('appDetailsContainer').style.display = 'block';
         }
 
-        function renderAppDetails(appId, app) {
-            // Header
-            document.getElementById('appName').textContent = app.name;
-            document.getElementById('appIcon').src = app.iconUrl || 'https://via.placeholder.com/100';
-            document.getElementById('developerLink').textContent = `by ${app.uploadedBy || 'Unknown'}`;
-            document.getElementById('developerLink').href = `Profile.html?uid=${app.uploadedByUid}`;
-            document.getElementById('downloadBtn').href = app.link;
+        async function loadAppDetails(appId) {
+            try {
+                console.log('Loading app details for ID:', appId);
+                const appRef = ref(db, `apps/${appId}`);
+                const appSnapshot = await get(appRef);
 
-            // About Tab
-            document.getElementById('appDescription').innerHTML = app.description.replace(/\n/g, '<br>') || 'No description.';
+                if (!appSnapshot.exists()) {
+                    console.warn('App not found in database');
+                    showError('App not found');
+                    return;
+                }
+
+                const app = appSnapshot.val();
+                currentApp = app;
+                
+                if (app.status !== 'approved' && (!currentUser || currentUser.uid !== app.uploadedByUid)) {
+                    console.warn('App not approved or user not authorized');
+                    showError('App not available');
+                    return;
+                }
+
+                document.title = `${app.name} - AR Store`;
+                await renderAppDetails(appId, app);
+
+                document.getElementById('skeletonLoader').style.display = 'none';
+                document.getElementById('appDetailsContainer').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading app:', error);
+                showError('Failed to load app details');
+            }
+        }
+
+        function showError(message) {
+            console.log('Showing error:', message);
+            document.getElementById('skeletonLoader').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+            document.querySelector('#errorMessage p').textContent = message;
+        }
+
+        async function renderAppDetails(appId, app) {
+            console.log('Rendering app details:', app.name);
+            document.getElementById('appName').textContent = app.name || 'Unnamed App';
+            document.getElementById('appIcon').src = app.iconUrl || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiNjY2MiPjxwYXRoIGQ9Ik0xMiAyLjAyYzYuMDggMCAxMS4xNSAxLjQ5IDExLjE1IDMuMzVzLTUuMDcgMy4zNC0xMS4xNSAzLjM0QzUuOTEgOC43IDAuODQgNy4yMSAwLjg0IDUuMzVTMi45MSAyLjAyIDUuOTEgMi4wMmg2LjA5em0wIDQuNzNjMy4zMSAwIDYuMDIgMS4xMiA2LjAyIDIuNSAwIDEuMzgtMi43MSAyLjUtNi4wMiAyLjUtMy4zMSAwLTYuMDItMS4xMi02LjAyLTIuNSAwLTEuMzggMi43MS0yLjUgNi4wMi0yLjV6bTAtMi41YzEuNjYgMCAzIC43NSAzIDEuNjdTMzMuNjYgNy41IDEyIDcuNXMtMy0uNzUtMy0xLjY3YzAtLjkyIDEuMzQtMS42NyAzLTEuNjd6Ii8+PC9zdmc+';
+            
+            let developerName = 'Unknown';
+            if (app.uploadedByUid) {
+                try {
+                    const userRef = ref(db, `users/${app.uploadedByUid}`);
+                    const userSnapshot = await get(userRef);
+                    if (userSnapshot.exists()) {
+                        developerName = userSnapshot.val().displayName || 'Anonymous';
+                    }
+                } catch (error) {
+                    console.error('Error fetching developer name:', error);
+                }
+            }
+            document.getElementById('developerLink').textContent = `by ${developerName}`;
+            document.getElementById('developerLink').href = `profile.html?uid=${app.uploadedByUid || ''}`;
+            document.getElementById('developerName').textContent = developerName;
+            document.getElementById('downloadBtn').href = app.link || '#';
+
+            if (app.platform) {
+                const platformIcons = {
+                    'github': '🎯 GitHub',
+                    'dropbox': '📦 Dropbox', 
+                    'firebase': '🔥 Firebase',
+                    'google-drive': '☁️ Drive',
+                    'aws': '🌐 AWS',
+                    'direct': '🔗 Direct'
+                };
+                const platformBadge = document.getElementById('platformBadge');
+                platformBadge.textContent = platformIcons[app.platform] || '🔗 Hosted';
+                platformBadge.style.display = 'inline-flex';
+            }
+
+            document.getElementById('appDescription').innerHTML = (app.description || 'No description available.').replace(/\n/g, '<br>');
             document.getElementById('appVersion').textContent = app.version || '1.0';
-            document.getElementById('appLastUpdated').textContent = new Date(app.createdAt).toLocaleDateString();
+            document.getElementById('appLastUpdated').textContent = app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'Unknown';
+            document.getElementById('downloadCount').textContent = app.downloadCount || 0;
 
-            // Screenshots
-            if (app.screenshots) {
+            if (app.screenshots && app.screenshots.trim()) {
                 document.getElementById('screenshotSection').style.display = 'block';
                 const gallery = document.getElementById('screenshotGallery');
                 gallery.innerHTML = '';
-                app.screenshots.split(',').forEach(url => {
-                    gallery.innerHTML += `<img src="${url.trim()}" alt="screenshot">`;
+                const screenshots = app.screenshots.split(',').filter(url => url.trim());
+                screenshots.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url.trim();
+                    img.alt = 'Screenshot';
+                    img.onerror = function() { this.style.display = 'none'; };
+                    img.onclick = function() { window.open(url.trim(), '_blank'); };
+                    gallery.appendChild(img);
                 });
             }
 
-            // Load dynamic parts
             loadReviews(appId);
             loadRelatedApps(app.uploadedByUid, appId);
             addEventListeners(appId, app);
         }
         
-        function loadReviews(appId) {
-            const reviewsRef = ref(db, `apps/${appId}/reviews`);
-            onValue(reviewsRef, (snapshot) => {
+        async function loadReviews(appId) {
+            console.log('Loading reviews for app ID:', appId);
+            const reviewsRef = ref(db, `reviews/${appId}`);
+            onValue(reviewsRef, async (snapshot) => {
                 const reviewList = document.getElementById('review-list');
                 reviewList.innerHTML = '';
                 let totalRating = 0, reviewCount = 0;
 
                 if (snapshot.exists()) {
+                    const reviews = [];
                     snapshot.forEach(child => {
-                        const review = child.val();
-                        totalRating += review.rating;
+                        reviews.push({ id: child.key, ...child.val() });
+                    });
+                    
+                    reviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                    for (const review of reviews) {
+                        totalRating += review.rating || 0;
                         reviewCount++;
+                        let reviewerName = 'Anonymous';
+                        if (review.userId) {
+                            try {
+                                const userRef = ref(db, `users/${review.userId}`);
+                                const userSnapshot = await get(userRef);
+                                if (userSnapshot.exists()) {
+                                    reviewerName = userSnapshot.val().displayName || 'Anonymous';
+                                }
+                            } catch (error) {
+                                console.error('Error fetching reviewer name:', error);
+                            }
+                        }
                         const reviewDiv = document.createElement('div');
                         reviewDiv.className = 'review';
                         reviewDiv.innerHTML = `
-                            <div class="stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
-                            <p>${review.text}</p>
-                            <small>By: ${review.user} on ${new Date(review.timestamp).toLocaleDateString()}</small>
+                            <div class="review-header">
+                                <div class="stars">${'★'.repeat(review.rating || 0)}${'☆'.repeat(5 - (review.rating || 0))}</div>
+                                <small>by ${reviewerName} on ${new Date(review.timestamp || Date.now()).toLocaleDateString()}</small>
+                            </div>
+                            <p>${(review.text || 'No comment provided.').replace(/\n/g, '<br>')}</p>
                         `;
-                        reviewList.prepend(reviewDiv);
-                    });
-                } else {
-                    reviewList.innerHTML = '<p>No reviews yet. Be the first!</p>';
+                        reviewList.appendChild(reviewDiv);
+                    }
+                }
+
+                if (reviewCount === 0) {
+                    reviewList.innerHTML = '<div class="review"><p>📝 No reviews yet. Be the first to share your thoughts!</p></div>';
                 }
                 
-                // Update average rating
-                const avgRating = reviewCount > 0 ? (totalRating / reviewCount).toFixed(1) : 0;
-                document.getElementById('avgRatingText').textContent = avgRating;
+                const avgRating = reviewCount > 0 ? (totalRating / reviewCount) : 0;
+                document.getElementById('avgRatingText').textContent = avgRating.toFixed(1);
                 document.getElementById('avgRatingStars').innerHTML = '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating));
                 document.getElementById('reviewCount').textContent = `(${reviewCount} reviews)`;
+            }, {
+                errorCallback: (error) => {
+                    console.error('Error loading reviews:', error);
+                    document.getElementById('review-list').innerHTML = '<p class="error-message">Failed to load reviews. Please try again later.</p>';
+                }
             });
         }
         
         function loadRelatedApps(developerUid, currentAppId) {
+            console.log('Loading related apps for developer UID:', developerUid);
+            if (!developerUid) {
+                console.warn('No developer UID provided');
+                document.getElementById('relatedAppsGrid').innerHTML = '<p>No developer information available.</p>';
+                return;
+            }
+
             const q = query(ref(db, 'apps'), orderByChild('uploadedByUid'), equalTo(developerUid));
             onValue(q, (snapshot) => {
                 const grid = document.getElementById('relatedAppsGrid');
                 grid.innerHTML = '';
                 let count = 0;
+                
                 if (snapshot.exists()) {
+                    const apps = [];
                     snapshot.forEach(child => {
-                        if (child.key !== currentAppId && count < 5) { // Show up to 5 other apps
-                            const app = child.val();
-                            const card = document.createElement('div');
-                            card.className = 'related-app-card';
-                            card.innerHTML = `<img src="${app.iconUrl}"><h5 style="margin-top: 5px;">${app.name}</h5>`;
-                            card.onclick = () => window.location.href = `App_Details.html?id=${child.key}`;
-                            grid.appendChild(card);
-                            count++;
+                        if (child.key !== currentAppId && child.val().status === 'approved') {
+                            apps.push({ id: child.key, ...child.val() });
                         }
                     });
+
+                    apps.slice(0, 6).forEach(app => {
+                        const card = document.createElement('div');
+                        card.className = 'related-app-card';
+                        card.innerHTML = `
+                            <img src="${app.iconUrl || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDI4IDI4IiBmaWxsPSIjY2NjIj48cGF0aCBkPSJNMTQgMmw0LjIgOC41IDI4IDguNzUtNi44IDYuNiAyLjMgOC4yNS0xMC4yLTQuMi0xMC4yIDQuMiAyLjMtOC4yNS02LjgtNi42IDI4LTguNzV6Ii8+PC9zdmc+'}" 
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDI4IDI4IiBmaWxsPSIjY2NjIj48cGF0aCBkPSJNMTQgMmw0LjIgOC41IDI4IDguNzUtNi44IDYuNiAyLjMgOC4yNS0xMC4yLTQuMi0xMC4yIDQuMiAyLjMtOC4yNS02LjgtNi42IDI4LTguNzV6Ii8+PC9zdmc+'">
+                            <h5>${app.name || 'Unnamed App'}</h5>
+                        `;
+                        card.onclick = () => window.location.href = `app-details.html?id=${app.id}`;
+                        grid.appendChild(card);
+                        count++;
+                    });
                 }
-                if(count === 0) grid.innerHTML = '<p>No other apps by this developer.</p>';
-            }, { onlyOnce: true });
+                
+                if (count === 0) {
+                    grid.innerHTML = '<p>👤 No other apps by this developer.</p>';
+                }
+            }, {
+                onlyOnce: true,
+                errorCallback: (error) => {
+                    console.error('Error loading related apps:', error);
+                    document.getElementById('relatedAppsGrid').innerHTML = '<p class="error-message">Failed to load related apps. Please try again later.</p>';
+                }
+            });
+        }
+
+        async function handleReviewSubmit(e, appId) {
+            e.preventDefault();
+            console.log('Submitting review for app ID:', appId);
+            
+            if (!currentUser) {
+                alert('Please log in to leave a review.');
+                return;
+            }
+
+            const form = e.target;
+            const text = form.querySelector('textarea').value.trim();
+            const rating = parseInt(document.getElementById('userRatingStars').dataset.rating);
+            
+            if (!rating) {
+                alert('Please select a star rating.');
+                return;
+            }
+
+            if (!text) {
+                alert('Please write a review.');
+                return;
+            }
+
+            try {
+                const reviewRef = ref(db, `reviews/${appId}`);
+                const newReviewRef = push(reviewRef);
+                const reviewData = {
+                    userId: currentUser.uid,
+                    rating: rating,
+                    text: text,
+                    timestamp: Date.now()
+                };
+
+                await set(newReviewRef, reviewData);
+
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+
+                form.reset();
+                document.getElementById('userRatingStars').dataset.rating = '0';
+                document.querySelectorAll('#userRatingStars span').forEach(star => {
+                    star.innerHTML = '☆';
+                    star.classList.remove('selected');
+                });
+
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('Failed to submit review. Please try again later.');
+            }
+        }
+
+        function shareApp(app) {
+            console.log('Sharing app:', app.name);
+            const shareData = {
+                title: app.name,
+                text: `Check out ${app.name} on AR Store! ${app.description || ''}`,
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(error => {
+                    console.error('Error sharing:', error);
+                    fallbackShare(shareData);
+                });
+            } else {
+                fallbackShare(shareData);
+            }
+        }
+
+        function fallbackShare(shareData) {
+            console.log('Using fallback share');
+            const textArea = document.createElement('textarea');
+            textArea.value = `${shareData.title}\n${shareData.text}\n${shareData.url}`;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('Link copied to clipboard!');
+            } catch (error) {
+                console.error('Copy failed:', error);
+                alert('Failed to copy link. Please copy manually: ' + textArea.value);
+            }
+            document.body.removeChild(textArea);
         }
 
         function addEventListeners(appId, app) {
-            // Tab switching
+            console.log('Adding event listeners for app ID:', appId);
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
-                    document.querySelector('.tab.active').classList.remove('active');
-                    document.querySelector('.tab-content.active').classList.remove('active');
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     tab.classList.add('active');
                     document.getElementById(`${tab.dataset.tab}Tab`).classList.add('active');
                 });
             });
 
-            // Download count
-            document.getElementById('downloadBtn').addEventListener('click', () => {
-                update(ref(db, `apps/${appId}`), { downloadCount: increment(1) });
-            }, { once: true });
+            document.getElementById('downloadBtn').addEventListener('click', async () => {
+                console.log('Download button clicked for app ID:', appId);
+                try {
+                    await update(ref(db, `apps/${appId}`), { 
+                        downloadCount: increment(1),
+                        lastDownload: Date.now()
+                    });
+                } catch (error) {
+                    console.error('Error updating download count:', error);
+                }
+            });
 
-            // Share button
             document.getElementById('shareBtn').addEventListener('click', () => shareApp(app));
 
-            // Review submission
             const stars = document.querySelectorAll('#userRatingStars span');
             stars.forEach(star => {
+                star.addEventListener('mouseover', () => {
+                    const rating = star.dataset.value;
+                    stars.forEach(s => {
+                        s.innerHTML = s.dataset.value <= rating ? '★' : '☆';
+                    });
+                });
+                
                 star.addEventListener('click', () => {
                     const rating = star.dataset.value;
                     document.getElementById('userRatingStars').dataset.rating = rating;
-                    stars.forEach(s => s.innerHTML = s.dataset.value <= rating ? '★' : '☆');
+                    stars.forEach(s => {
+                        s.classList.toggle('selected', s.dataset.value <= rating);
+                    });
                 });
             });
 
-            document.getElementById('review-form').addEventListener('submit', (e) => handleReviewSubmit(e, appId));
-        }
-        
-        async function handleReviewSubmit(e, appId) {
-            e.preventDefault();
-            const text = e.target.querySelector('textarea').value.trim();
-            const rating = parseInt(document.getElementById('userRatingStars').dataset.rating);
-            if (!rating) return alert('Please select a star rating.');
-            if (!currentUser) return alert('Please log in to leave a review.');
-
-            const reviewRef = ref(db, `apps/${appId}/reviews/${currentUser.uid}`); // One review per user
-            await set(reviewRef, {
-                rating, text, user: currentUser.displayName || currentUser.email, timestamp: Date.now()
+            document.getElementById('userRatingStars').addEventListener('mouseleave', () => {
+                const selectedRating = document.getElementById('userRatingStars').dataset.rating;
+                stars.forEach(s => {
+                    s.innerHTML = s.dataset.value <= selectedRating ? '★' : '☆';
+                });
             });
-            e.target.reset();
-            document.querySelectorAll('#userRatingStars span').forEach(s => s.innerHTML = '☆');
-        }
 
-        function shareApp(app) {
-            const shareData = {
-                title: app.name,
-                text: `Check out ${app.name} on AR Store!`,
-                url: window.location.href
-            };
-            if (navigator.share && navigator.canShare(shareData)) {
-                navigator.share(shareData);
-            } else {
-                alert(`Share this link: ${window.location.href}`);
-            }
+            document.getElementById('reviewForm').addEventListener('submit', (e) => handleReviewSubmit(e, appId));
         }
     </script>
 </body>
