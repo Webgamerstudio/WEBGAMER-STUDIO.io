@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Store - Admin Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-hover: #5a67d8;
+            --text-dark: #2c3e50;
+            --text-light: #555;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --pending-color: #f2994a;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        header {
+            background: var(--white);
+            padding: 15px 5%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo h1 {
+            font-size: 1.6em;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-light);
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+
+        main {
+            padding: 30px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--white);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        .count-badge {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: inherit;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+
+        .filter-btn.active .count-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .app-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .app-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .app-icon {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 15px;
+            flex-shrink: 0;
+        }
+
+        .app-info {
+            flex-grow: 1;
+        }
+
+        .app-info h4 {
+            font-size: 1.2em;
+            margin: 0 0 5px;
+        }
+
+        .app-info .uploader {
+            font-size: 0.85em;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .download-link {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #eef0ff;
+            color: var(--primary-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .app-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 120px;
+        }
+
+        .app-actions button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .approve-btn {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .reject-btn {
+            background: var(--pending-color);
+            color: white;
+        }
+
+        .delete-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        #noAppsMessage,
+        #auth-message {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-container h3 {
+            margin-bottom: 15px;
+        }
+
+        .modal-container textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            margin-bottom: 15px;
+            -webkit-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .login-form h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background: var(--primary-hover);
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <header>
+        <div class="logo">
+            <h1><a href="index.html" style="text-decoration: none; color: inherit;">AR Store</a></h1>
+        </div>
+        <nav class="nav-menu"></nav>
+        <div id="authOptions"></div>
+    </header>
+
+    <main id="mainContent" style="display: none;">
+        <section class="admin-section">
+            <h2>App Management Dashboard</h2>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-status="pending">Pending <span class="count-badge" id="pendingCount">0</span></button>
+                <button class="filter-btn" data-status="approved">Approved <span class="count-badge" id="approvedCount">0</span></button>
+                <button class="filter-btn" data-status="rejected">Rejected <span class="count-badge" id="rejectedCount">0</span></button>
+            </div>
+            <div class="app-list" id="appList"></div>
+            <p id="noAppsMessage" style="display: none;">No apps found in this filter.</p>
+        </section>
+    </main>
+
+    <div id="rejectionModal" class="modal-overlay">
+        <div class="modal-container">
+            <h3>Reason for App Rejection</h3>
+            <p style="margin-bottom: 15px; font-size: 0.9em; color: #555;">Please inform the developer why the app is being rejected. This message will be shown on their profile.</p>
+            <textarea id="rejectionMessage" placeholder="e.g., The app has bugs or does not comply with our policies..."></textarea>
+            <div class="modal-actions">
+                <button id="cancelRejection" style="background: #ccc;">Cancel</button>
+                <button id="confirmRejection" class="reject-btn">Send Message & Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auth-message" style="display: none; margin: 100px auto; max-width: 600px;">
+        <div class="login-form" id="loginForm" style="display: none;">
+            <h3>Admin Login</h3>
+            <p class="error-message" id="loginError"></p>
+            <input type="email" id="emailInput" placeholder="Enter your Gmail" required>
+            <input type="password" id="passwordInput" placeholder="Enter your password" required>
+            <button id="loginButton">Login</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getDatabase, ref, onValue, update, remove, push } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { auth } from './firebase-config.js';
+
+        const ADMIN_EMAILS = ['ainetworkmining22@gmail.com', 'abdulrohimrire013@gmail.com', 'katomineconnect@gmail.com'];
+        const mainContent = document.getElementById('mainContent');
+        const authOptions = document.getElementById('authOptions');
+        const appList = document.getElementById('appList');
+        const noAppsMessage = document.getElementById('noAppsMessage');
+        const authMessage = document.getElementById('auth-message');
+        const filterTabs = document.querySelector('.filter-tabs');
+        const rejectionModal = document.getElementById('rejectionModal');
+        const rejectionMessage = document.getElementById('rejectionMessage');
+        const cancelRejection = document.getElementById('cancelRejection');
+        const confirmRejection = document.getElementById('confirmRejection');
+        const loginForm = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginButton');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginError = document.getElementById('loginError');
+        const counts = {
+            pending: document.getElementById('pendingCount'),
+            approved: document.getElementById('approvedCount'),
+            rejected: document.getElementById('rejectedCount')
+        };
+
+        let allApps = {};
+        let currentFilter = 'pending';
+
+        onAuthStateChanged(auth, (user) => {
+            if (user && ADMIN_EMAILS.includes(user.email)) {
+                mainContent.style.display = 'block';
+                authMessage.style.display = 'none';
+                loginForm.style.display = 'none';
+                const userInitial = user.displayName?.charAt(0)?.toUpperCase() || user.email.charAt(0).toUpperCase();
+                authOptions.innerHTML = `<a href="profile.html" class="profile-btn" title="Profile">${userInitial}</a>`;
+                loadAllApps();
+            } else {
+                mainContent.style.display = 'none';
+                authMessage.style.display = 'block';
+                loginForm.style.display = user ? 'none' : 'block';
+                authMessage.textContent = user ? 'Sorry, this page is for admins only.' : '';
+                if (user && !ADMIN_EMAILS.includes(user.email)) {
+                    setTimeout(() => window.location.href = 'index.html', 2000);
+                }
+            }
+        });
+
+        loginButton.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                loginError.textContent = 'Please enter both email and password.';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                if (!ADMIN_EMAILS.includes(email)) {
+                    await auth.signOut();
+                    loginError.textContent = 'This email is not authorized for admin access.';
+                    loginError.style.display = 'block';
+                } else {
+                    loginError.style.display = 'none';
+                }
+            } catch (error) {
+                loginError.textContent = error.message;
+                loginError.style.display = 'block';
+            }
+        });
+
+        filterTabs.addEventListener('click', (e) => {
+            const button = e.target.closest('button.filter-btn');
+            if (button) {
+                currentFilter = button.dataset.status;
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                button.classList.add('active');
+                renderApps();
+            }
+        });
+
+        appList.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (!button) return;
+            const appId = button.dataset.appid;
+
+            if (button.classList.contains('approve-btn')) {
+                const appToApprove = allApps[appId];
+                updateAppStatus(appId, 'approved');
+                sendApprovalMessage(appToApprove.uploadedByUid, appToApprove.name);
+            } else if (button.classList.contains('reject-btn')) {
+                openRejectionModal(appId);
+            } else if (button.classList.contains('delete-btn')) {
+                if (confirm('Are you sure you want to permanently delete this app?')) {
+                    deleteApp(appId);
+                }
+            }
+        });
+
+        function openRejectionModal(appId) {
+            rejectionModal.style.display = 'flex';
+            confirmRejection.dataset.appid = appId;
+        }
+
+        cancelRejection.addEventListener('click', () => {
+            rejectionModal.style.display = 'none';
+        });
+
+        confirmRejection.addEventListener('click', () => {
+            const appId = confirmRejection.dataset.appid;
+            const message = rejectionMessage.value.trim();
+            if (!message) {
+                alert('A reason for rejection is required.');
+                return;
+            }
+
+            const appToReject = allApps[appId];
+            if (!appToReject || !appToReject.uploadedByUid) {
+                alert('Developer information could not be found.');
+                return;
+            }
+
+            sendRejectionMessage(appToReject.uploadedByUid, appToReject.name, message);
+            updateAppStatus(appId, 'rejected');
+            rejectionMessage.value = '';
+            rejectionModal.style.display = 'none';
+        });
+
+        function sendNotification(userId, appName, message, type) {
+            const db = getDatabase();
+            const notificationRef = ref(db, `notifications/${userId}`);
+            const newNotification = {
+                type,
+                appName,
+                message,
+                timestamp: Date.now(),
+                read: false
+            };
+            push(notificationRef, newNotification)
+                .catch(err => console.error('Failed to send notification:', err));
+        }
+
+        function sendRejectionMessage(userId, appName, message) {
+            sendNotification(userId, appName, message, 'rejection');
+        }
+
+        function sendApprovalMessage(userId, appName) {
+            const message = 'Congratulations! Your app has been approved and is now live in the store.';
+            sendNotification(userId, appName, message, 'approval');
+        }
+
+        function loadAllApps() {
+            const db = getDatabase();
+            onValue(ref(db, 'apps'), (snapshot) => {
+                allApps = snapshot.val() || {};
+                updateCounts();
+                renderApps();
+            });
+        }
+
+        function updateAppStatus(appId, status) {
+            update(ref(getDatabase(), `apps/${appId}`), { status });
+        }
+
+        function deleteApp(appId) {
+            remove(ref(getDatabase(), `apps/${appId}`));
+        }
+
+        function updateCounts() {
+            const statusCounts = { pending: 0, approved: 0, rejected: 0 };
+            Object.values(allApps).forEach(app => {
+                if (statusCounts.hasOwnProperty(app.status)) {
+                    statusCounts[app.status]++;
+                }
+            });
+            counts.pending.textContent = statusCounts.pending;
+            counts.approved.textContent = statusCounts.approved;
+            counts.rejected.textContent = statusCounts.rejected;
+        }
+
+        function renderApps() {
+            appList.innerHTML = '';
+            const filteredAppIds = Object.keys(allApps).filter(id => allApps[id].status === currentFilter);
+            noAppsMessage.style.display = filteredAppIds.length === 0 ? 'block' : 'none';
+
+            filteredAppIds.sort((a, b) => allApps[b].createdAt - allApps[a].createdAt).forEach(appId => {
+                const app = allApps[appId];
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                let actionButtons = '';
+                if (app.status === 'pending') {
+                    actionButtons = `
+                        <button class="approve-btn" data-appid="${appId}">Approve</button>
+                        <button class="reject-btn" data-appid="${appId}">Reject</button>`;
+                } else if (app.status === 'approved') {
+                    actionButtons = `<button class="reject-btn" data-appid="${appId}">Reject</button>`;
+                } else if (app.status === 'rejected') {
+                    actionButtons = `<button class="approve-btn" data-appid="${appId}">Approve</button>`;
+                }
+                actionButtons += `<button class="delete-btn" data-appid="${appId}" style="margin-top: 10px;">Delete</button>`;
+
+                card.innerHTML = `
+                    <img src="${app.iconUrl || 'https://via.placeholder.com/70'}" class="app-icon" alt="${app.name} icon" onerror="this.src='https://via.placeholder.com/70'">
+                    <div class="app-info">
+                        <h4>${app.name}</h4>
+                        <p class="uploader">Submitted by: ${app.uploadedBy || 'N/A'} | ${new Date(app.createdAt).toLocaleDateString()}</p>
+                        <a href="${app.link}" target="_blank" class="download-link">Download App</a>
+                    </div>
+                    <div class="app-actions">${actionButtons}</div>`;
+                appList.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
