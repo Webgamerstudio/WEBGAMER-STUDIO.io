@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR NoteBook - Professional Notepad</title>
+    
+    <!-- Meta Tags for SEO & PWA -->
+    <meta name="description" content="AR NoteBook - একটি মডার্ন, রেসপন্সিভ এবং ফিচার-সমৃদ্ধ নোটপ্যাড যা আপনার কাজকে আরও সহজ করে তুলবে।">
+    <meta name="keywords" content="নোটপ্যাড, টেক্সট এডিটর, নোট, লেখা, প্রফেশনাল, বাংলা নোটপ্যাড">
+    <meta name="author" content="AR NoteBook Team">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root {
+            --accent-primary: #2563eb;
+            --accent-secondary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --white: #ffffff;
+            --black: #000000;
+            --bg-primary-light: #f8fafc;
+            --bg-secondary-light: #ffffff;
+            --bg-tertiary-light: #f1f5f9;
+            --text-primary-light: #0f172a;
+            --text-secondary-light: #475569;
+            --border-primary-light: #e2e8f0;
+            --bg-primary-dark: #0f172a;
+            --bg-secondary-dark: #1e293b;
+            --bg-tertiary-dark: #334155;
+            --text-primary-dark: #f1f5f9;
+            --text-secondary-dark: #94a3b8;
+            --border-primary-dark: #334155;
+            --bg-primary: var(--bg-primary-light);
+            --bg-secondary: var(--bg-secondary-light);
+            --bg-tertiary: var(--bg-tertiary-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --border-primary: var(--border-primary-light);
+            --header-height: 60px;
+            --sidebar-width: 280px;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: var(--bg-primary-dark);
+            --bg-secondary: var(--bg-secondary-dark);
+            --bg-tertiary: var(--bg-tertiary-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --border-primary: var(--border-primary-dark);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color var(--transition), color var(--transition);
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            padding: 0 1rem;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-primary);
+            border-radius: var(--border-radius);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-secondary);
+            transform: translateY(-1px);
+        }
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--white);
+            border-color: var(--accent-primary);
+        }
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+            border-color: var(--accent-secondary);
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+            border-color: var(--danger);
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+        .btn-icon {
+            padding: 0.5rem;
+            width: 36px;
+            height: 36px;
+        }
+        .btn .btn-text {
+            display: none;
+        }
+
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            flex-shrink: 0;
+        }
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+        .search-box {
+            padding: 1rem;
+        }
+        .search-input, .category-select {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-primary);
+            border-radius: var(--border-radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .notes-list {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .note-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-primary);
+            cursor: pointer;
+            transition: background-color var(--transition);
+            position: relative;
+        }
+        .note-item:hover {
+            background: var(--bg-tertiary);
+        }
+        .note-item.active {
+            background: var(--accent-primary);
+            color: var(--white);
+        }
+        .note-item.active * {
+            color: var(--white);
+        }
+        .note-item.pinned::before {
+            content: '📌';
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .editor-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+        .editor-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+        .note-title-input {
+            width: 100%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+        }
+        .editor-toolbar {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .toolbar-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .toolbar-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .editor-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        .text-editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.7;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin: 0.5rem 0;
+            border-radius: var(--border-radius);
+        }
+
+        .welcome-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .status-bar {
+            height: 32px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        .offline-warning {
+            background: var(--warning);
+            color: var(--white);
+            padding: 0.5rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .ad-container {
+            width: 100%;
+            max-width: 728px;
+            margin: 0 auto;
+            padding: 0.5rem;
+            text-align: center;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-primary);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 200;
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-lg);
+                border-right: 1px solid var(--border-primary);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 199;
+                display: none;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+            .editor-content {
+                padding: 1rem;
+            }
+            .note-title-input {
+                font-size: 1.25rem;
+            }
+            .ad-container iframe {
+                width: 100%;
+                height: 90px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .btn .btn-text {
+                display: inline;
+            }
+            #toggleSidebar {
+                display: none;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="offlineWarning" class="offline-warning hidden">You are offline. Changes will sync when online.</div>
+    <header class="header">
+        <div class="header-controls">
+            <button class="btn btn-icon" id="toggleSidebar" aria-label="Toggle sidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fa-solid fa-note-sticky"></i>
+                <span class="btn-text">AR NoteBook</span>
+            </div>
+        </div>
+        
+        <div class="header-controls">
+            <button class="btn" id="newNote" aria-label="Create new note">
+                <i class="fa-solid fa-plus"></i>
+                <span class="btn-text">New Note</span>
+            </button>
+            <button class="btn btn-primary" id="saveNote" aria-label="Save current note">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span class="btn-text">Save</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>My Notes (<span id="notesCount">0</span>)</h2>
+            </div>
+            <div class="search-box">
+                <select class="category-select" id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Work">Work</option>
+                    <option value="Study">Study</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search notes...">
+            </div>
+            <div class="notes-list" id="notesList"></div>
+        </aside>
+        
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <section class="editor-container" id="editorContainer">
+            <div class="welcome-screen" id="welcomeScreen">
+                <i class="fa-solid fa-note-sticky" style="font-size: 4rem; color: var(--accent-primary); margin-bottom: 1rem;"></i>
+                <h1>Welcome to AR NoteBook</h1>
+                <p>Select a note from the list or create a new one to get started.</p>
+                <button class="btn btn-primary" id="createFirstNote" style="margin-top: 1rem;">
+                    <i class="fa-solid fa-plus"></i> Create First Note
+                </button>
+            </div>
+            
+            <div class="editor-wrapper hidden" id="editorWrapper">
+                <div class="editor-header">
+                    <input type="text" class="note-title-input" id="noteTitleInput" placeholder="Untitled Note...">
+                    <select class="category-select" id="noteCategory" style="margin-top: 0.5rem;">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                        <option value="Study">Study</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="editor-toolbar" id="editorToolbar">
+                    <button class="toolbar-btn" data-command="bold"><i class="fa-solid fa-bold"></i></button>
+                    <button class="toolbar-btn" data-command="italic"><i class="fa-solid fa-italic"></i></button>
+                    <button class="toolbar-btn" data-command="underline"><i class="fa-solid fa-underline"></i></button>
+                    <input type="file" id="fileUpload" accept="image/*" style="display: none;">
+                    <button class="toolbar-btn" id="uploadImage"><i class="fa-solid fa-image"></i></button>
+                </div>
+                <div class="editor-content">
+                    <textarea class="text-editor" id="textEditor" placeholder="Start writing..."></textarea>
+                    <div id="imagePreview"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="status-bar">
+        <div>Word Count: <span id="wordCount">0</span></div>
+        <div id="saveStatus">Saved</div>
+    </footer>
+
+    <section class="ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key': '63718988f07bc6d276f3c6a441757cae',
+                'format': 'iframe',
+                'height': 90,
+                'width': 728,
+                'params': {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/63718988f07bc6d276f3c6a441757cae/invoke.js"></script>
+    </section>
+
+    <script>
+        (() => {
+            const dom = {
+                sidebar: document.getElementById('sidebar'),
+                sidebarOverlay: document.getElementById('sidebarOverlay'),
+                toggleSidebarBtn: document.getElementById('toggleSidebar'),
+                notesList: document.getElementById('notesList'),
+                notesCount: document.getElementById('notesCount'),
+                searchInput: document.getElementById('searchInput'),
+                categoryFilter: document.getElementById('categoryFilter'),
+                welcomeScreen: document.getElementById('welcomeScreen'),
+                editorWrapper: document.getElementById('editorWrapper'),
+                noteTitleInput: document.getElementById('noteTitleInput'),
+                noteCategory: document.getElementById('noteCategory'),
+                textEditor: document.getElementById('textEditor'),
+                imagePreview: document.getElementById('imagePreview'),
+                fileUpload: document.getElementById('fileUpload'),
+                uploadImageBtn: document.getElementById('uploadImage'),
+                newNoteBtn: document.getElementById('newNote'),
+                createFirstNoteBtn: document.getElementById('createFirstNote'),
+                saveNoteBtn: document.getElementById('saveNote'),
+                wordCount: document.getElementById('wordCount'),
+                saveStatus: document.getElementById('saveStatus'),
+                toolbar: document.getElementById('editorToolbar'),
+                offlineWarning: document.getElementById('offlineWarning'),
+            };
+
+            let notes = [];
+            let currentNoteId = null;
+            let unsavedChanges = false;
+            let offlineChanges = [];
+
+            const app = {
+                init() {
+                    this.loadNotes();
+                    this.renderNotes();
+                    this.setupEventListeners();
+                    this.setupServiceWorker();
+                    if (notes.length > 0) {
+                        this.loadNote(notes[0].id);
+                    } else {
+                        this.showWelcomeScreen();
+                    }
+                },
+
+                loadNotes() {
+                    notes = JSON.parse(localStorage.getItem('notes-ar')) || [];
+                },
+
+                saveNotes() {
+                    localStorage.setItem('notes-ar', JSON.stringify(notes));
+                    unsavedChanges = false;
+                    this.updateSaveStatus();
+                    if (!navigator.onLine) {
+                        offlineChanges.push([...notes]);
+                        dom.offlineWarning.classList.remove('hidden');
+                    }
+                },
+
+                renderNotes(query = '', category = 'all') {
+                    let filteredNotes = notes.filter(note => 
+                        (note.title.toLowerCase().includes(query.toLowerCase()) ||
+                        note.content.toLowerCase().includes(query.toLowerCase())) &&
+                        (category === 'all' || note.category === category)
+                    );
+
+                    filteredNotes.sort((a, b) => (b.isPinned || 0) - (a.isPinned || 0));
+
+                    dom.notesList.innerHTML = '';
+                    if (filteredNotes.length === 0) {
+                        dom.notesList.innerHTML = '<p style="padding: 1rem; text-align: center;">No notes found.</p>';
+                    } else {
+                        filteredNotes.forEach(note => {
+                            const noteEl = document.createElement('div');
+                            noteEl.className = `note-item ${note.id === currentNoteId ? 'active' : ''} ${note.isPinned ? 'pinned' : ''}`;
+                            noteEl.dataset.id = note.id;
+                            noteEl.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h3>${note.title || 'Untitled Note'}</h3>
+                                        <p>${note.content.substring(0, 50).replace(/\n/g, ' ')}...</p>
+                                        <small>${note.category || 'Uncategorized'}</small>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-icon" data-id="${note.id}" data-action="pin">
+                                            <i class="fa-solid ${note.isPinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'}"></i>
+                                        </button>
+                                        <button class="btn btn-icon btn-danger" data-id="${note.id}" data-action="delete">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            noteEl.addEventListener('click', (e) => {
+                                if (e.target.closest('button')) return;
+                                this.loadNote(note.id);
+                            });
+                            noteEl.querySelector('[data-action="pin"]').addEventListener('click', () => this.togglePin(note.id));
+                            noteEl.querySelector('[data-action="delete"]').addEventListener('click', () => this.deleteNote(note.id));
+                            dom.notesList.appendChild(noteEl);
+                        });
+                    }
+                    dom.notesCount.textContent = notes.length;
+                },
+
+                loadNote(id) {
+                    if (unsavedChanges && !confirm("You have unsaved changes. Are you sure you want to switch?")) {
+                        return;
+                    }
+                    
+                    const note = notes.find(n => n.id === id);
+                    if (!note) return;
+
+                    currentNoteId = id;
+                    dom.noteTitleInput.value = note.title;
+                    dom.noteCategory.value = note.category || 'Personal';
+                    dom.textEditor.value = note.content;
+                    dom.imagePreview.innerHTML = note.images ? note.images.map(url => `<img src="${url}" class="image-preview">`).join('') : '';
+
+                    this.showEditor();
+                    this.renderNotes(dom.searchInput.value, dom.categoryFilter.value);
+                    this.updateEditorInfo();
+                    unsavedChanges = false;
+                    this.updateSaveStatus();
+                    
+                    if (window.innerWidth <= 768) {
+                        this.closeSidebar();
+                    }
+                },
+
+                createNewNote() {
+                    const newNote = {
+                        id: `note_${Date.now()}`,
+                        title: '',
+                        content: '',
+                        category: dom.noteCategory.value || 'Personal',
+                        images: [],
+                        isPinned: false,
+                    };
+                    notes.unshift(newNote);
+                    this.saveNotes();
+                    this.loadNote(newNote.id);
+                    dom.noteTitleInput.focus();
+                },
+
+                saveCurrentNote() {
+                    if (!currentNoteId) return;
+                    const note = notes.find(n => n.id === currentNoteId);
+                    if (note) {
+                        note.title = dom.noteTitleInput.value.trim();
+                        note.content = dom.textEditor.value;
+                        note.category = dom.noteCategory.value;
+                        this.saveNotes();
+                        this.renderNotes(dom.searchInput.value, dom.categoryFilter.value);
+                        dom.saveStatus.textContent = 'Saved!';
+                        setTimeout(() => this.updateSaveStatus(), 1500);
+                    }
+                },
+
+                deleteNote(id) {
+                    if (confirm('Are you sure you want to delete this note?')) {
+                        notes = notes.filter(note => note.id !== id);
+                        this.saveNotes();
+                        if (currentNoteId === id) {
+                            currentNoteId = null;
+                            if (notes.length > 0) {
+                                this.loadNote(notes[0].id);
+                            } else {
+                                this.showWelcomeScreen();
+                            }
+                        }
+                        this.renderNotes(dom.searchInput.value, dom.categoryFilter.value);
+                    }
+                },
+
+                togglePin(id) {
+                    const note = notes.find(n => n.id === id);
+                    if (note) {
+                        note.isPinned = !note.isPinned;
+                        this.saveNotes();
+                        this.renderNotes(dom.searchInput.value, dom.categoryFilter.value);
+                    }
+                },
+
+                handleImageUpload(e) {
+                    const file = e.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const note = notes.find(n => n.id === currentNoteId);
+                            if (note) {
+                                note.images = note.images || [];
+                                note.images.push(event.target.result);
+                                dom.imagePreview.innerHTML += `<img src="${event.target.result}" class="image-preview">`;
+                                this.saveNotes();
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+
+                showEditor() {
+                    dom.welcomeScreen.classList.add('hidden');
+                    dom.editorWrapper.classList.remove('hidden');
+                },
+
+                showWelcomeScreen() {
+                    dom.welcomeScreen.classList.remove('hidden');
+                    dom.editorWrapper.classList.add('hidden');
+                    currentNoteId = null;
+                },
+
+                updateEditorInfo() {
+                    const wordCount = dom.textEditor.value.trim().split(/\s+/).filter(Boolean).length;
+                    dom.wordCount.textContent = wordCount;
+                    unsavedChanges = true;
+                    this.updateSaveStatus();
+                },
+
+                updateSaveStatus() {
+                    dom.saveStatus.textContent = unsavedChanges ? 'Unsaved' : 'Saved';
+                },
+
+                openSidebar() {
+                    dom.sidebar.classList.add('open');
+                    dom.sidebarOverlay.classList.add('active');
+                },
+
+                closeSidebar() {
+                    dom.sidebar.classList.remove('open');
+                    dom.sidebarOverlay.classList.remove('active');
+                },
+
+                setupServiceWorker() {
+                    if ('serviceWorker' in navigator) {
+                        // Unregister old service workers to avoid conflicts
+                        navigator.serviceWorker.getRegistrations().then(registrations => {
+                            for (let registration of registrations) {
+                                registration.unregister();
+                            }
+                        }).then(() => {
+                            // Register new service worker
+                            navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+                                .then(reg => {
+                                    console.log('Service Worker registered successfully', reg);
+                                })
+                                .catch(err => {
+                                    console.error('Service Worker registration failed:', err);
+                                    dom.offlineWarning.textContent = 'Offline support unavailable. Please ensure HTTPS or localhost.';
+                                    dom.offlineWarning.classList.remove('hidden');
+                                });
+                        });
+
+                        window.addEventListener('online', () => {
+                            dom.offlineWarning.classList.add('hidden');
+                            if (offlineChanges.length > 0) {
+                                offlineChanges = [];
+                                alert('Changes synced with server!');
+                            }
+                        });
+
+                        window.addEventListener('offline', () => {
+                            dom.offlineWarning.classList.remove('hidden');
+                        });
+                    } else {
+                        console.warn('Service Worker not supported in this browser.');
+                        dom.offlineWarning.textContent = 'Offline support not available in this browser.';
+                        dom.offlineWarning.classList.remove('hidden');
+                    }
+                },
+
+                setupEventListeners() {
+                    dom.toggleSidebarBtn.addEventListener('click', () => this.openSidebar());
+                    dom.sidebarOverlay.addEventListener('click', () => this.closeSidebar());
+                    dom.newNoteBtn.addEventListener('click', () => this.createNewNote());
+                    dom.createFirstNoteBtn.addEventListener('click', () => this.createNewNote());
+                    dom.saveNoteBtn.addEventListener('click', () => this.saveCurrentNote());
+                    dom.noteTitleInput.addEventListener('input', () => this.updateEditorInfo());
+                    dom.textEditor.addEventListener('input', () => this.updateEditorInfo());
+                    dom.searchInput.addEventListener('input', (e) => this.renderNotes(e.target.value, dom.categoryFilter.value));
+                    dom.categoryFilter.addEventListener('change', (e) => this.renderNotes(dom.searchInput.value, e.target.value));
+                    dom.uploadImageBtn.addEventListener('click', () => dom.fileUpload.click());
+                    dom.fileUpload.addEventListener('change', (e) => this.handleImageUpload(e));
+
+                    dom.toolbar.addEventListener('click', (e) => {
+                        const button = e.target.closest('.toolbar-btn');
+                        if (button) {
+                            const command = button.dataset.command;
+                            document.execCommand(command, false, null);
+                            dom.textEditor.focus();
+                        }
+                    });
+
+                    document.addEventListener('keydown', (e) => {
+                        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                            e.preventDefault();
+                            this.saveCurrentNote();
+                        }
+                    });
+                },
+            };
+
+            app.init();
+        })();
+    </script>
+</body>
+</html>
