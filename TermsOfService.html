@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - AR Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-hover: #5a67d8;
+            --text-dark: #2c3e50;
+            --text-light: #555;
+            --text-muted: #777;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-color: #764ba2;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 15px 5%;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .document-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+
+        .document-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .document-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Content Sections */
+        .content-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toc h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .toc li {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 12px 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .toc li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .toc a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc a:hover {
+            color: var(--primary-color);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .section h3 {
+            font-size: 1.3rem;
+            margin: 25px 0 15px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .section ul, .section ol {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+
+        .section li {
+            margin-bottom: 10px;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .contact-info a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                padding: 20px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .document-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .document-header p {
+                font-size: 1rem;
+            }
+
+            .content {
+                padding: 30px 25px;
+            }
+
+            .toc {
+                padding: 25px 20px;
+            }
+
+            .toc ul {
+                grid-template-columns: 1fr;
+            }
+
+            .section h2 {
+                font-size: 1.6rem;
+            }
+
+            main {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .document-header {
+                margin-bottom: 30px;
+                padding: 30px 20px;
+            }
+
+            .document-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 25px 20px;
+            }
+
+            .highlight-box {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            header {
+                position: static;
+                box-shadow: none;
+                border-bottom: 2px solid var(--border-color);
+            }
+
+            .back-btn, .hamburger {
+                display: none;
+            }
+
+            .document-header {
+                box-shadow: none;
+                border: 2px solid var(--border-color);
+            }
+
+            .content-container {
+                box-shadow: none;
+                border: 1px solid var(--border-color);
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <div class="header-content">
+            <div class="logo">
+                <h1><a href="index.html">AR Store</a></h1>
+            </div>
+            <div class="hamburger" aria-label="Toggle navigation" role="button">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="nav-links" role="navigation">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="PrivacyPolicy.html">Privacy Policy</a>
+            </nav>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Store
+            </a>
+        </div>
+    </header>
+
+    <main role="main">
+        <div class="document-header">
+            <h1>Terms of Service</h1>
+            <p>Please read these terms carefully before using AR Store</p>
+            <p class="last-updated">Last updated: August 25, 2025</p>
+        </div>
+
+        <div class="content-container">
+            <div class="toc">
+                <h2>📋 Table of Contents</h2>
+                <ul>
+                    <li><a href="#acceptance">🤝 Acceptance of Terms</a></li>
+                    <li><a href="#description">📱 Service Description</a></li>
+                    <li><a href="#accounts">👤 User Accounts</a></li>
+                    <li><a href="#developer-terms">💻 Developer Terms</a></li>
+                    <li><a href="#content-policy">📋 Content Policy</a></li>
+                    <li><a href="#intellectual-property">©️ Intellectual Property</a></li>
+                    <li><a href="#privacy">🔒 Privacy & Data</a></li>
+                    <li><a href="#prohibited-conduct">🚫 Prohibited Conduct</a></li>
+                    <li><a href="#disclaimers">⚠️ Disclaimers</a></li>
+                    <li><a href="#limitation-liability">⚖️ Limitation of Liability</a></li>
+                    <li><a href="#termination">🔚 Termination</a></li>
+                    <li><a href="#changes">📝 Changes to Terms</a></li>
+                    <li><a href="#contact">📞 Contact Information</a></li>
+                </ul>
+            </div>
+
+            <div class="content">
+                <section class="section" id="acceptance">
+                    <h2>1. Acceptance of Terms</h2>
+                    <p>By accessing or using AR Store ("the Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, then you may not access the Service.</p>
+                    
+                    <div class="highlight-box">
+                        <h4>Important Notice</h4>
+                        <p>These Terms constitute a legally binding agreement between you and AR Store. Please read them carefully.</p>
+                    </div>
+                </section>
+
+                <section class="section" id="description">
+                    <h2>2. Service Description</h2>
+                    <p>AR Store is a platform that enables users to:</p>
+                    <ul>
+                        <li>Discover and download augmented reality applications</li>
+                        <li>Upload and distribute AR applications (for developers)</li>
+                        <li>Rate, review, and share AR applications</li>
+                        <li>Create user profiles and connect with other users</li>
+                        <li>Access developer tools and analytics</li>
+                    </ul>
+                    
+                    <h3>2.1 Service Availability</h3>
+                    <p>We strive to maintain high availability but do not guarantee uninterrupted access. The Service may be temporarily unavailable for maintenance, updates, or due to technical issues.</p>
+                    
+                    <h3>2.2 Service Modifications</h3>
+                    <p>We reserve the right to modify, suspend, or discontinue any aspect of the Service at any time with or without notice.</p>
+                </section>
+
+                <section class="section" id="accounts">
+                    <h2>3. User Accounts</h2>
+                    
+                    <h3>3.1 Account Registration</h3>
+                    <p>To access certain features, you must create an account. You agree to:</p>
+                    <ul>
+                        <li>Provide accurate, current, and complete information</li>
+                        <li>Maintain and update your account information</li>
+                        <li>Keep your password secure and confidential</li>
+                        <li>Accept responsibility for all activities under your account</li>
+                        <li>Notify us immediately of any unauthorized use</li>
+                    </ul>
+                    
+                    <h3>3.2 Account Eligibility</h3>
+                    <p>You must be at least 13 years old to create an account. Users under 18 must have parental consent.</p>
+                    
+                    <h3>3.3 Account Termination</h3>
+                    <p>We may suspend or terminate accounts that violate these Terms or for any other reason at our sole discretion.</p>
+                </section>
+
+                <section class="section" id="developer-terms">
+                    <h2>4. Developer Terms</h2>
+                    
+                    <h3>4.1 App Submission</h3>
+                    <p>Developers may submit AR applications subject to our review process. By submitting an app, you warrant that:</p>
+                    <ul>
+                        <li>You own all rights to the application and its content</li>
+                        <li>The app does not infringe on third-party rights</li>
+                        <li>The app complies with applicable laws and regulations</li>
+                        <li>You have the right to distribute the application</li>
+                    </ul>
+                    
+                    <h3>4.2 App Review Process</h3>
+                    <p>All submitted apps undergo a review process. We reserve the right to:</p>
+                    <ul>
+                        <li>Approve or reject submissions at our discretion</li>
+                        <li>Remove apps that violate our policies</li>
+                        <li>Request modifications before approval</li>
+                        <li>Set guidelines for app content and functionality</li>
+                    </ul>
+                    
+                    <h3>4.3 Revenue and Monetization</h3>
+                    <p>AR Store does not currently charge developers for app distribution. We reserve the right to introduce monetization features in the future with adequate notice.</p>
+                    
+                    <h3>4.4 Developer Responsibilities</h3>
+                    <p>As a developer, you are responsible for:</p>
+                    <ul>
+                        <li>Providing accurate app information and descriptions</li>
+                        <li>Maintaining functional download links</li>
+                        <li>Responding to user feedback and support requests</li>
+                        <li>Updating your apps to fix bugs and security issues</li>
+                        <li>Complying with platform-specific requirements</li>
+                    </ul>
+                </section>
+
+                <section class="section" id="content-policy">
+                    <h2>5. Content Policy</h2>
+                    
+                    <h3>5.1 Prohibited Content</h3>
+                    <p>The following types of content are strictly prohibited:</p>
+                    <ul>
+                        <li>Malicious software, viruses, or harmful code</li>
+                        <li>Content promoting violence, hatred, or discrimination</li>
+                        <li>Adult or sexually explicit material</li>
+                        <li>Illegal activities or content</li>
+                        <li>Spam, misleading, or deceptive content</li>
+                        <li>Copyright-infringing material</li>
+                        <li>Apps that compromise user privacy or security</li>
+                    </ul>
+                    
+                    <h3>5.2 Content Moderation</h3>
+                    <p>We reserve the right to remove any content that violates our policies or is deemed inappropriate. This includes apps, reviews, user profiles, and other user-generated content.</p>
+                    
+                    <h3>5.3 User-Generated Content</h3>
+                    <p>Users are responsible for their reviews, comments, and profile information. By posting content, you grant us a non-exclusive license to use, display, and distribute such content in connection with the Service.</p>
+                </section>
+
+                <section class="section" id="intellectual-property">
+                    <h2>6. Intellectual Property Rights</h2>
+                    
+                    <h3>6.1 Platform Rights</h3>
+                    <p>AR Store and its original content, features, and functionality are owned by us and are protected by international copyright, trademark, and other intellectual property laws.</p>
+                    
+                    <h3>6.2 User Content Rights</h3>
+                    <p>You retain ownership of your intellectual property rights in content you submit. However, you grant us the necessary licenses to operate the Service.</p>
+                    
+                    <h3>6.3 DMCA Compliance</h3>
+                    <p>We respect intellectual property rights and respond to valid DMCA takedown notices. If you believe your copyright has been infringed, please contact us with:</p>
+                    <ul>
+                        <li>Description of the copyrighted work</li>
+                        <li>Location of the infringing material</li>
+                        <li>Your contact information</li>
+                        <li>Statement of good faith belief</li>
+                        <li>Statement of accuracy and authorization</li>
+                    </ul>
+                </section>
+
+                <section class="section" id="privacy">
+                    <h2>7. Privacy and Data Protection</h2>
+                    <p>Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your information. By using the Service, you agree to our data practices as described in the Privacy Policy.</p>
+                    
+                    <h3>7.1 Data Collection</h3>
+                    <p>We collect information you provide directly, usage data, and technical information to improve our Service.</p>
+                    
+                    <h3>7.2 Data Security</h3>
+                    <p>We implement appropriate security measures to protect your personal information, but no method of transmission over the internet is 100% secure.</p>
+                </section>
+
+                <section class="section" id="prohibited-conduct">
+                    <h2>8. Prohibited Conduct</h2>
+                    <p>Users must not:</p>
+                    <ul>
+                        <li>Violate any applicable laws or regulations</li>
+                        <li>Infringe on the rights of others</li>
+                        <li>Upload malicious software or harmful content</li>
+                        <li>Attempt to gain unauthorized access to the Service</li>
+                        <li>Interfere with the Service's operation or security</li>
+                        <li>Create fake accounts or impersonate others</li>
+                        <li>Engage in harassment, abuse, or threatening behavior</li>
+                        <li>Distribute spam or unsolicited communications</li>
+                        <li>Reverse engineer or attempt to extract source code</li>
+                        <li>Use automated tools to access the Service</li>
+                    </ul>
+                </section>
+
+                <section class="section" id="disclaimers">
+                    <h2>9. Disclaimers</h2>
+                    
+                    <div class="highlight-box">
+                        <h4>Important Disclaimer</h4>
+                        <p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND.</p>
+                    </div>
+                    
+                    <h3>9.1 No Warranties</h3>
+                    <p>We disclaim all warranties, express or implied, including but not limited to:</p>
+                    <ul>
+                        <li>Merchantability and fitness for a particular purpose</li>
+                        <li>Non-infringement of third-party rights</li>
+                        <li>Accuracy, reliability, or completeness of content</li>
+                        <li>Uninterrupted or error-free operation</li>
+                    </ul>
+                    
+                    <h3>9.2 Third-Party Content</h3>
+                    <p>We do not endorse, guarantee, or assume responsibility for any third-party applications, content, or services accessed through our platform.</p>
+                    
+                    <h3>9.3 Download Risks</h3>
+                    <p>Users download and install applications at their own risk. We are not responsible for any damage to devices or data loss resulting from app installations.</p>
+                </section>
+
+                <section class="section" id="limitation-liability">
+                    <h2>10. Limitation of Liability</h2>
+                    <p>To the fullest extent permitted by law, AR Store shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:</p>
+                    <ul>
+                        <li>Loss of profits, data, or business opportunities</li>
+                        <li>Device damage or malfunction</li>
+                        <li>Security breaches or data loss</li>
+                        <li>Third-party actions or content</li>
+                        <li>Service interruptions or errors</li>
+                    </ul>
+                    
+                    <p>Our total liability for any claims shall not exceed $100 or the amount you paid to us in the past 12 months, whichever is greater.</p>
+                </section>
+
+                <section class="section" id="termination">
+                    <h2>11. Termination</h2>
+                    
+                    <h3>11.1 Termination by You</h3>
+                    <p>You may stop using the Service at any time. You can delete your account through your profile settings.</p>
+                    
+                    <h3>11.2 Termination by Us</h3>
+                    <p>We may terminate or suspend your access immediately, without prior notice, for:</p>
+                    <ul>
+                        <li>Violation of these Terms</li>
+                        <li>Illegal or harmful behavior</li>
+                        <li>Prolonged inactivity</li>
+                        <li>Technical or security reasons</li>
+                    </ul>
+                    
+                    <h3>11.3 Effect of Termination</h3>
+                    <p>Upon termination, your right to use the Service ceases immediately. Your data may be deleted, though some information may be retained as required by law or for legitimate business purposes.</p>
+                </section>
+
+                <section class="section" id="changes">
+                    <h2>12. Changes to Terms</h2>
+                    <p>We may update these Terms from time to time. When we do, we will:</p>
+                    <ul>
+                        <li>Post the revised Terms on this page</li>
+                        <li>Update the "Last updated" date</li>
+                        <li>Notify users of significant changes via email or platform notification</li>
+                        <li>Provide at least 30 days notice for material changes</li>
+                    </ul>
+                    
+                    <p>Your continued use of the Service after changes become effective constitutes acceptance of the revised Terms.</p>
+                </section>
+
+                <section class="section" id="general">
+                    <h2>13. General Provisions</h2>
+                    
+                    <h3>13.1 Governing Law</h3>
+                    <p>These Terms are governed by and construed in accordance with applicable local laws. Any disputes will be resolved in the appropriate jurisdiction.</p>
+                    
+                    <h3>13.2 Severability</h3>
+                    <p>If any provision of these Terms is found to be unenforceable, the remaining provisions will remain in full force and effect.</p>
+                    
+                    <h3>13.3 Entire Agreement</h3>
+                    <p>These Terms, together with our Privacy Policy, constitute the entire agreement between you and AR Store regarding use of the Service.</p>
+                    
+                    <h3>13.4 Assignment</h3>
+                    <p>You may not transfer your rights under these Terms without our written consent. We may assign our rights and obligations at any time.</p>
+                    
+                    <h3>13.5 Force Majeure</h3>
+                    <p>We are not liable for any failure to perform due to circumstances beyond our reasonable control, including natural disasters, war, terrorism, or government actions.</p>
+                </section>
+
+                <section class="section" id="contact">
+                    <h2>14. Contact Information</h2>
+                    <p>If you have questions about these Terms of Service, please contact us:</p>
+                    
+                    <div class="contact-info">
+                        <h3>📧 Get in Touch</h3>
+                        <p>Email: <a href="webgamerconnect@gmail.com">webgamerconnect@gmail.com</a></p>
+                        <p>Support: <a href="adminconnect@gmail.com">adminconnect@gmail.com</a></p>
+                        <p>Website: <a href="https://arstore.com">arstore.com</a></p>
+                        <p>Response time: Within 48 hours for legal inquiries</p>
+                    </div>
+                </section>
+
+                <div class="highlight-box" style="text-align: center; margin-top: 40px;">
+                    <h4>🎯 Summary</h4>
+                    <p>By using AR Store, you agree to use our platform responsibly, respect others' rights, and follow our community guidelines. We're committed to providing a safe and innovative platform for AR app discovery and distribution.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Hamburger menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Smooth scrolling for anchor links with error handling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Highlight the section briefly
+                    target.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+                    setTimeout(() => {
+                        target.style.backgroundColor = '';
+                    }, 2000);
+                } else {
+                    console.warn(`Target element ${targetId} not found`);
+                }
+            });
+        });
+
+        // Add scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            
+            let progressBar = document.querySelector('.scroll-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'scroll-progress';
+                document.body.appendChild(progressBar);
+            }
+            progressBar.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: ${scrolled}%;
+                height: 3px;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                z-index: 1000;
+            `;
+        });
+    </script>
+</body>
+</html>
